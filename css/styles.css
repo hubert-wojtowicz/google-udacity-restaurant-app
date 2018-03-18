@@ -184,6 +184,12 @@ nav h1 a {
 }
 
 /* ====================== Restaurant Details ====================== */
+@media screen and (max-width: 680px){
+  .inside #breadcrumb {
+    width: 100%;
+  }
+}
+
 .inside header {
   position: fixed;
   top: 0;
