@@ -194,12 +194,18 @@ nav h1 a {
     width: 100%;
     z-index: 1000;
   }
+  .inside #footer {
+    width: 100%;
+  }
 }
 
 @media screen and (min-width: 680px){
   .inside #map-container {
     top: 80px;
     height: 87%;
+    width: 50%;
+  }
+  .inside #footer {
     width: 50%;
   }
 }
@@ -223,7 +229,6 @@ nav h1 a {
 .inside #footer {
   bottom: 0;
   position: absolute;
-  width: 50%;
 }
 #restaurant-name {
   color: #f18200;
