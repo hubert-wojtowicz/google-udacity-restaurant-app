@@ -184,9 +184,17 @@ nav h1 a {
 }
 
 /* ====================== Restaurant Details ====================== */
-@media screen and (max-width: 680px){
+@media screen and (max-width: 679px){
   .inside #breadcrumb {
     width: 100%;
+  }
+  .inside #map-container {
+    top: 131px;
+  }
+}
+@media screen and (min-width: 680px){
+  .inside #map-container {
+    top: 80px;
   }
 }
 
@@ -201,7 +209,6 @@ nav h1 a {
   height: 87%;
   position: fixed;
   right: 0;
-  top: 80px;
   width: 50%;
 }
 .inside #map {
