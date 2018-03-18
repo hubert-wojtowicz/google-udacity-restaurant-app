@@ -195,7 +195,7 @@ nav h1 a {
     z-index: 1000;
   }
   .inside #footer {
-    width: 100%;
+    width: calc(100% - 50px)
   }
 }
 
