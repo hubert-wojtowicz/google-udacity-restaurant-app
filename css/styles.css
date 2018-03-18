@@ -192,8 +192,10 @@ nav h1 a {
     top: 131px;
     height: 37%;
     width: 100%;
+    z-index: 1000;
   }
 }
+
 @media screen and (min-width: 680px){
   .inside #map-container {
     top: 80px;
