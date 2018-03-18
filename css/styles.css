@@ -197,6 +197,16 @@ nav h1 a {
   .inside #footer {
     width: calc(100% - 50px)
   }
+  .inside #restaurant-container {
+    padding-top: calc(37% + 140px + 131px);
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 30px;
+    width: calc(100% - 2*40px);
+  }
+  .inside #reviews-container {
+      width: calc(100% - 2*40px);
+  }
 }
 
 @media screen and (min-width: 680px){
@@ -208,6 +218,9 @@ nav h1 a {
   .inside #footer {
     width: 50%;
   }
+  .inside #restaurant-container, #reviews-container {
+    width: 50%;
+  }    
 }
 
 .inside header {
@@ -263,7 +276,6 @@ nav h1 a {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
   padding: 140px 40px 30px;
-  width: 50%;
 }
 #reviews-container {
   padding: 30px 40px 80px;
