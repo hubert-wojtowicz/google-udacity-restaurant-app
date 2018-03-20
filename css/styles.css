@@ -198,7 +198,7 @@ nav h1 a {
     width: calc(100% - 50px)
   }
   .inside #restaurant-container {
-    padding-top: calc(37% + 140px + 131px);
+    padding-top: calc(51px + 80px + 37vh);
     padding-left: 40px;
     padding-right: 40px;
     padding-bottom: 30px;
@@ -227,6 +227,7 @@ nav h1 a {
   position: fixed;
   top: 0;
   width: 100%;
+  /* height: 18%; */
   z-index: 1000;
 }
 .inside #map-container {
