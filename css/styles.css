@@ -210,7 +210,7 @@ nav h1 a {
 @media screen and (min-width: 680px){
   .inside #map-container {
     top: 80px;
-    height: 87%;
+    height: calc(100% - 80px);
     width: 50%;
   }
   .inside #footer {
