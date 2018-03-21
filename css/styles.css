@@ -214,13 +214,13 @@ nav h1 a {
     width: 50%;
   }
   .inside #footer {
-    width: 50%;
+    width: calc(50% - 50px);;
   }
   .inside #restaurant-container {
     width: calc(50% - 2*30px);
   }
   .inside #reviews-container {
-    width: 50%;
+    width: calc(50% - 30px);
   }
   .inside #restaurant-container {
     padding: calc(51px + 80px) 0 40px 30px;
