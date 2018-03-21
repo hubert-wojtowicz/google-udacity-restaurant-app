@@ -339,3 +339,7 @@ nav h1 a {
 #restaurant-hours td {
   color: #666;
 }
+#restaurant-hours tr > td:first-child {
+  font-weight: bold;
+  text-decoration: underline;
+}
