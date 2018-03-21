@@ -1,6 +1,6 @@
 let restaurant;
 var map;
-
+const maxRating=5;
 /**
  * Initialize Google map, called from HTML.
  */
@@ -117,23 +117,40 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  */
 createReviewHTML = (review) => {
   const li = document.createElement('li');
-  const name = document.createElement('p');
-  name.innerHTML = review.name;
-  li.appendChild(name);
 
-  const date = document.createElement('p');
-  date.innerHTML = review.date;
-  li.appendChild(date);
-
-  const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
-  li.appendChild(rating);
+  li.appendChild(createReviewHeader(review));
 
   const comments = document.createElement('p');
+  comments.setAttribute('class','review-essence');  
+  
   comments.innerHTML = review.comments;
   li.appendChild(comments);
 
   return li;
+}
+
+createReviewHeader = (review) => {
+  const rewiewHeader = document.createElement('div');
+  rewiewHeader.setAttribute('class','review-header');
+
+  const pullLeftContainer = document.createElement('div');
+  pullLeftContainer.setAttribute('class','pull-left');
+  rewiewHeader.appendChild(pullLeftContainer);
+  
+  const name = document.createElement('p');
+  name.innerHTML = review.name;
+  pullLeftContainer.appendChild(name);
+
+  const rating = document.createElement('p');
+  rating.innerHTML = "★".repeat(review.rating) + "☆".repeat(maxRating - review.rating);
+  pullLeftContainer.appendChild(rating);
+
+  const date = document.createElement('p');
+  date.setAttribute('class','pull-right');  
+  date.innerHTML = review.date;
+  rewiewHeader.appendChild(date);
+
+  return rewiewHeader;
 }
 
 /**
