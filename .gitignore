@@ -1,0 +1,5 @@
+#node packages
+node_modules/
+
+#grunt resized pictures
+img-resized/
