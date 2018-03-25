@@ -5,14 +5,19 @@ module.exports = function(grunt) {
             options: {
               // engine: 'im',
               sizes: [{
-                width: 400,
-                suffix: '-400q30',
+                width: 270,
+                suffix: 'min1x',
                 quality: 30
               },
               {
-                width: 200,
-                suffix: '-200q30',
-                quality: 30
+                width: 540,
+                suffix: 'min2x',
+                quality: 50
+              },
+              {
+                width: 800,
+                suffix: '',
+                quality: 100
               }]
             },
             files: [{
@@ -23,21 +28,7 @@ module.exports = function(grunt) {
             }]
           }
         },
-    
-        // resize_crop: {
-        //   image_group: {
-    
-        //     options: {
-        //       format: "jpg",
-        //       gravity: "center",
-        //       height: 200,
-        //       width: 200
-        //     },
-    
-        //     files: {'img/1.jpg': ['imgSrc/1.jpg']}
-        //   },
-        // },
-    
+
         clean: {
           dev: {
             src: ['img-resized'],
