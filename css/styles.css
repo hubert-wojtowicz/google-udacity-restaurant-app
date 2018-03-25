@@ -258,13 +258,15 @@ nav h1 a {
   line-height: 1.1;
 }
 #restaurant-img {
-	width: 100%;
+  width: 100%;
+  max-width: 800px;
 }
 #restaurant-address {
   font-size: 12pt;
   margin: 10px 0px;
 }
 #restaurant-cuisine {
+  max-width: 800px;
   background-color: #333;
   color: #ddd;
   font-size: 12pt;
