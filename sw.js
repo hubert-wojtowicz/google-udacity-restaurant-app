@@ -1,3 +1,5 @@
+var staticCacheName = 'mws-restaurant-v3'
+
 self.addEventListener('install',(event)=>{
     var urlsToCache = [
         '/',
@@ -11,10 +13,27 @@ self.addEventListener('install',(event)=>{
     ];
 
     event.waitUntil(
-        caches.open('mws-restaurant-v1').then((cache)=>{
+        caches.open(staticCacheName).then((cache)=>{
             return cache.addAll(urlsToCache);
         })
     );
+});
+
+self.addEventListener('activate',(event)=>{
+    event.waitUntil( 
+        caches.keys().then((cacheNames)=>{
+            return Promise.all(
+                cacheNames.filter((cacheName)=>{
+                    debugger;
+                    return cacheName.startsWith('mws-restaurant-v') && 
+                        cacheName != staticCacheName;
+                }).map((cacheName)=>{
+                    debugger;
+                    return caches.delete(cacheName);
+                })
+            );
+        })
+    )
 });
 
 self.addEventListener('fetch', (event)=>{
