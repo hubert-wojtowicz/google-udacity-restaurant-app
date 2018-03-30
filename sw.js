@@ -1,10 +1,23 @@
-var staticCacheName = 'mws-restaurant-v3'
+var staticCacheName = 'mws-restaurant-v3';
 
+function pictureNames(path) {
+    let names = new Array();
+    const numberOfPict = 10;
+    let sufixes = ['-270min1x.jpg', '-540min2x.jpg', '-800.jpg'];
+    for(let i=1;i<=10;i++) {
+        sufixes.forEach((val, index)=>{
+            names.push(`${path}${i}${val}`)
+        })
+    }
+    return names;
+}
 
 self.addEventListener('install',(event)=>{
     var urlsToCache = [
         '/',
-        //'//normalize-css.googlecode.com/svn/trunk/normalize.css',
+        'sw.js',
+        'index.js',
+        'restaurant.html',
         'js/dbhelper.js',
         'js/main.js',
         'js/dbhelper.js',
@@ -16,10 +29,12 @@ self.addEventListener('install',(event)=>{
         'https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu7GxKOzY.woff2',
         'https://fonts.gstatic.com/s/roboto/v18/KFOlCnqEu92Fr1MmEU9fBBc4.woff2'
     ];
+
+    var picturesToCache = pictureNames('img-resized/');
     
     event.waitUntil(
         caches.open(staticCacheName).then((cache)=>{
-            return cache.addAll(urlsToCache);
+            return cache.addAll(urlsToCache.concat(picturesToCache));
         })
     );
 });
@@ -43,7 +58,7 @@ self.addEventListener('fetch', (event)=>{
     event.respondWith(
         caches.match(event.request).then((response)=>{
             if(response) {
-                console.log('Take from cache' + event.request.url);
+                console.log('Take from cache: ' + event.request.url);
                 return response;
             } 
 
@@ -54,7 +69,7 @@ self.addEventListener('fetch', (event)=>{
                     console.log('Take from outside world: '+event.request.url);
                     return response;
                 }).catch((err)=>{
-                    return new Response(`Request failed! Error msg: ${err}`);
+                    console.log(`Request failed! Error msg: ${err}`);
                 })
         })
     );
