@@ -21,10 +21,6 @@ a {
 	color: orange;
 	text-decoration: none;
 }
-a:hover, a:focus {
-	color: #3397db;
-	text-decoration: none;
-}
 a img{
 	border: none 0px #fff;
 }
@@ -106,7 +102,7 @@ nav h1 a {
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
   width: 100%;
-  background-color: #3397DB;
+  background-color: orange;
   align-items: center;
 }
 .filter-options h2 {
@@ -174,7 +170,6 @@ nav h1 a {
 }
 #restaurants-list li a {
   background-color: orange;
-  border-bottom: 3px solid #eee;
   color: #fff;
   display: inline-block;
   font-size: 10pt;
@@ -183,6 +178,15 @@ nav h1 a {
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+#restaurants-list li a:focus, #footer a:focus {
+  background-color: black;
+  box-shadow: 0 0 6pt 4pt orange;
+  color: orange;
+}
+#cuisines-select:focus, #neighborhoods-select:focus {
+  box-shadow: 0 0 3pt 2pt black;
 }
 
 /* ====================== Restaurant Details ====================== */
