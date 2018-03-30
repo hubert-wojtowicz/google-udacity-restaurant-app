@@ -3,7 +3,7 @@ module.exports = function(grunt) {
         responsive_images: {
           dev: {
             options: {
-              // engine: 'im',
+              engine: 'gm',
               sizes: [{
                 width: 270,
                 suffix: 'min1x',
@@ -46,9 +46,7 @@ module.exports = function(grunt) {
       });
     
       grunt.loadNpmTasks('grunt-responsive-images');
-      grunt.loadNpmTasks('grunt-resize-crop');
       grunt.loadNpmTasks('grunt-contrib-clean');
-      grunt.loadNpmTasks('grunt-contrib-copy');
       grunt.loadNpmTasks('grunt-mkdir');
       grunt.registerTask('default', ['clean', 'mkdir', 'responsive_images']);
     };
