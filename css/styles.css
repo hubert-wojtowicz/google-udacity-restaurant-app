@@ -318,15 +318,14 @@ nav h1 a:focus {
   margin: 0 0 10px;
 }
 #reviews-list li .pull-right, .pull-left {
-  top: 5px;
   color: white;
-  position: absolute;
+  margin: 5px 15px;
 }
 #reviews-list li .pull-right {
-  right: 15px;
+  float: right;
 }
 #reviews-list li .pull-left {
-  left: 15px;
+  float: left;
 }
 #reviews-list .review-rating {
   position: relative;
@@ -334,7 +333,8 @@ nav h1 a:focus {
   color: white;
 }
 #reviews-list .review-header {
-  height: 30px;
+  width: 100%;
+  display: inline-block;
   background-color: black;
 }
 #reviews-list .review-essence {
