@@ -4,7 +4,7 @@
     "name": "Mission Chinese Food",
     "neighborhood": "Manhattan",
     "photograph": "1.jpg",
-    "alt": "Mission Chinese Food enterior photo. There is many pepole there.",
+    "alt": "Mission Chinese Food restaurant's enterior photo. There is many pepole inside. There are round tables in the middle of room and red armchairs close to walls.",
     "address": "171 E Broadway, New York, NY 10002",
     "latlng": {
       "lat": 40.713829,
@@ -44,7 +44,7 @@
     "name": "Emily",
     "neighborhood": "Brooklyn",
     "photograph": "2.jpg",
-    "alt": "Photo of the pizza with a lot of cheese made in Emily restaurant",
+    "alt": "Photo of the pizza with a lot of cheese made in Emily restaurant.",
     "address": "919 Fulton St, Brooklyn, NY 11238",
     "latlng": {
       "lat": 40.683555,
@@ -124,7 +124,7 @@
     "name": "Katz's Delicatessen",
     "neighborhood": "Manhattan",
     "photograph": "4.jpg",
-    "alt": "Face of the Katz's Delicatessen restaurant. Evening, some pedestrians walking. Red neon lights on the restautrant banner.",
+    "alt": "Face of the Katz's Delicatessen restaurant. Evening, some pedestrians walking neaby. Red neon lights on the restautrant banner.",
     "address": "205 E Houston St, New York, NY 10002",
     "latlng": {
       "lat": 40.722216,
@@ -164,7 +164,7 @@
     "name": "Roberta's Pizza",
     "neighborhood": "Brooklyn",
     "photograph": "5.jpg",
-    "alt": "Crowded enterior of Roberta's Pizza. Smily cook behind counter. The process of pizza production is visable to all.",
+    "alt": "Crowded enterior of Roberta's Pizza. Smily cook behind counter. The process of pizza production is visable to all. Big red oven behind cook.",
     "address": "261 Moore St, Brooklyn, NY 11206",
     "latlng": {
       "lat": 40.705089,
@@ -204,7 +204,7 @@
     "name": "Hometown BBQ",
     "neighborhood": "Brooklyn",
     "photograph": "6.jpg",
-    "alt": "Enterior of the Hometown BBQ restaurant. Many people inside. Big american flag on the wall. Long queue to restaurant's counter.",
+    "alt": "Enterior of the Hometown BBQ restaurant. Many people inside. Big american flag on the wall. Long queue to restaurant's counter. Small tables with four chair each.",
     "address": "454 Van Brunt St, Brooklyn, NY 11231",
     "latlng": {
       "lat": 40.674925,
@@ -284,7 +284,7 @@
     "name": "The Dutch",
     "neighborhood": "Manhattan",
     "photograph": "8.jpg",
-    "alt": "The pict of banner of The Dutch restaurant. Flowers on the three in front of restaurant.",
+    "alt": "The pict of blue banner of The Dutch restaurant. Flowers on the three in front of restaurant.",
     "address": "131 Sullivan St, New York, NY 10012",
     "latlng": {
       "lat": 40.726584,
@@ -324,7 +324,7 @@
     "name": "Mu Ramen",
     "neighborhood": "Queens",
     "photograph": "9.jpg",
-    "alt": "Picture of the Mu Ramen enterior. In the main part of photo sitting two people. A man is eating, while woman lloks at the cellphone. A lot of people there. ",
+    "alt": "Picture of the Mu Ramen enterior. In the main part of photo sitting two people. A man is eating, while woman looks at the cellphone. A lot of people there. ",
     "address": "1209 Jackson Ave, Queens, NY 11101",
     "latlng": {
       "lat": 40.743797,
