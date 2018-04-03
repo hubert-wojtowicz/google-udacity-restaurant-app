@@ -127,6 +127,7 @@ createReviewHTML = (review) => {
 
   const comments = document.createElement('p');
   comments.setAttribute('class','review-essence');  
+  comments.setAttribute('arial-label', 'Review essence');
   
   comments.innerHTML = review.comments;
   li.appendChild(comments);
@@ -144,15 +145,18 @@ createReviewHeader = (review) => {
   
   const name = document.createElement('p');
   name.innerHTML = review.name;
+  name.setAttribute('arial-label', 'Review by ' + review.name);
   pullLeftContainer.appendChild(name);
 
   const rating = document.createElement('p');
   rating.innerHTML = "★".repeat(review.rating) + "☆".repeat(maxRating - review.rating);
+  rating.setAttribute('arial-label', `Resraurant rate ${review.rating}/${maxRating}`);
   pullLeftContainer.appendChild(rating);
 
   const date = document.createElement('p');
   date.setAttribute('class','pull-right');  
   date.innerHTML = review.date;
+  date.setAttribute('arial-label','Date of review');
   rewiewHeader.appendChild(date);
 
   return rewiewHeader;
