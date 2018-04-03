@@ -81,7 +81,6 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   font-size: 4px;
   color: black;
 }
-
 /* Display list items side by side */
 #breadcrumb li {
   display: inline;
@@ -101,7 +100,6 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   font-weight: 700;
   text-decoration: none;
 }
-
 /* Add a color to all links inside the list */
 #breadcrumb li a {
   color: #0275d8;
@@ -143,7 +141,6 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   padding: 0 10px;
   width: 200px;
 }
-
 /* ====================== Restaurant Listing ====================== */
 #restaurants-list {
   background-color: #f3f3f3;
@@ -199,7 +196,6 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   text-decoration: none;
   text-transform: uppercase;
 }
-
 #restaurants-list li a:focus, #footer a:focus {
   background-color: black;
   box-shadow: 0 0 6pt 4pt orange;
@@ -208,7 +204,6 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 #cuisines-select:focus, #neighborhoods-select:focus {
   box-shadow: 0 0 3pt 2pt black;
 }
-
 /* ====================== Restaurant Details ====================== */
 @media screen and (max-width: 679px){
   .inside #breadcrumb {
@@ -228,7 +223,6 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
     width: calc(100% - 2*40px);
   }
 }
-
 @media screen and (min-width: 680px){
   .inside #map-container {
     top: 80px;
@@ -248,7 +242,6 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
     padding: calc(51px + 80px) 0 40px 30px;
   }
 }
-
 .inside header {
   position: fixed;
   top: 0;
@@ -303,7 +296,6 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
 }
-
 #reviews-container {
   padding: 30px 20px 80px;
 }
