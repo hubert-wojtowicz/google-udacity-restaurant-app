@@ -67,27 +67,34 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   color: orange;
 }
 #breadcrumb {
-    padding: 10px 40px 16px;
-    list-style: none;
-    background-color: #eee;
-    font-size: 17px;
-    margin: 0;
-    width: calc(50% - 80px);
+  padding: 10px 40px 16px;
+  list-style: none;
+  background-color: #eee;
+  font-size: 17px;
+  margin: 0;
+  width: calc(50% - 80px);
+}
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 4px;
+  color: black;
 }
 
 /* Display list items side by side */
 #breadcrumb li {
-    display: inline;
+  display: inline;
 }
 
 /* Add a slash symbol (/) before/behind each list item */
 #breadcrumb li + li:before {
-    display: inline-block;
-    margin: 0 .5em;
-    transform: rotate(15deg);
-    border-right: .1em solid currentColor;
-    height: .8em;
-    content: '';
+  display: inline-block;
+  margin: 0 .5em;
+  transform: rotate(15deg);
+  border-right: .1em solid currentColor;
+  height: .8em;
+  content: '';
 }
 #breadcrumb [aria-current="page"] {
   color: #000;
@@ -97,14 +104,14 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 
 /* Add a color to all links inside the list */
 #breadcrumb li a {
-    color: #0275d8;
-    text-decoration: none;
+  color: #0275d8;
+  text-decoration: none;
 }
 
 /* Add a color on mouse-over */
 #breadcrumb li a:hover {
-    color: #01447e;
-    text-decoration: underline;
+  color: #01447e;
+  text-decoration: underline;
 }
 /* ====================== Map ====================== */
 #map {
