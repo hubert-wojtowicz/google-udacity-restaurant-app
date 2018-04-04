@@ -39,9 +39,17 @@ self.addEventListener('fetch', function(event) {
       caches.open(cacheName).then(function(cache) {
         return cache.match(event.request).then(function (response) {
           return response || fetch(event.request).then(function(response) {
-            cache.put(event.request, response.clone());
-            return response;
-          });
+                cache.put(event.request, response.clone());
+                return response;
+            }).catch(()=>{
+                if(!navigator.onLine) {
+                    console.log('You are in offline mode and response of request is not cached! This is request:');
+                    console.log(event.request);
+                } else{
+                    console.log('Fetching request filed :(. This is request:');
+                    console.log(event.request);   
+                }
+            });
         });
       })
     );
