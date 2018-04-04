@@ -1,24 +1,23 @@
-var cacheName = 'mws-restaurant-v1';
-// var urlsToCache = [
-//     '/',
-//     'sw.js',
-//     'index.js',
-//     'restaurant.html',
-//     'js/dbhelper.js',
-//     'js/main.js',
-//     'js/dbhelper.js',
-//     'js/restaurant_info.js',
-//     'css/styles.css',
-//     'data/restaurants.json',
-// ];
+// mixed update on reload with static cache
 
-// self.addEventListener('install',(event)=>{
-//     event.waitUntil(
-//         caches.open(cacheName).then((cache)=>{
-//             return cache.addAll(urlsToCache);
-//         })
-//     );
-// });
+var cacheName = 'mws-restaurant-v1';
+var urlsToCache = [
+    '/',
+    'js/dbhelper.js',
+    'js/main.js',
+    'js/dbhelper.js',
+    'js/restaurant_info.js',
+    'css/styles.css',
+    'data/restaurants.json',
+];
+
+self.addEventListener('install',(event)=>{
+    event.waitUntil(
+        caches.open(cacheName).then((cache)=>{
+            return cache.addAll(urlsToCache);
+        })
+    );
+});
 
 self.addEventListener('activate',(event)=>{
     event.waitUntil(
