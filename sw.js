@@ -42,7 +42,7 @@ self.addEventListener('fetch', function(event) {
                 cache.put(event.request, response.clone());
                 return response;
             }).catch(()=>{
-                if(!navigator.onLine) {
+                if(navigator && !navigator.onLine) {
                     console.log('You are in offline mode and response of request is not cached! This is request:');
                     console.log(event.request);
                 } else{
