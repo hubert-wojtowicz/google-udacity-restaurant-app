@@ -76,10 +76,10 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 .skip-link {
   position: absolute;
-  top: 0;
+  top: 60px;
   left: 0;
-  font-size: 4px;
-  color: black;
+  font-size: 1em;
+  color: grey;
 }
 /* Display list items side by side */
 #breadcrumb li {
