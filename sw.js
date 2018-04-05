@@ -14,7 +14,7 @@ const urlsToCache = [
     'js/dbhelper.js',
     'js/restaurant_info.js',
     'css/styles.css',
-    'data/restaurants.json',
+    'data/restaurants.json'
 ];
 
 function pictureNames(path) {
@@ -56,27 +56,29 @@ self.addEventListener('fetch', function(event) {
       caches.open(cacheName).then(function(cache) {
         const url = new URL(event.request.url);
         if(url.pathname.startsWith('/restaurant.html')) {
-            debugger;
-            return cache.match('/restaurant.html').then(response => response || fetchReq(event.request));
+            return cache.match('/restaurant.html').then(response => {
+                return response || fetchReq(event.request, cache);///restaurant.html
+            });
         }
 
-        return cache.match(event.request).then(
-            response => response || fetchReq(event.request));
+        return cache.match(event.request).then(response => {
+            return response || fetchReq(event.request, cache);
+        });
       })
     );
   });
 
-function fetchReq(request){
+function fetchReq(request, cache){
     return fetch(request).then(function(response) {
         cache.put(request, response.clone());
         return response;
-    }).catch(()=>{
+    }).catch((err)=>{
+        debugger;
         if(navigator && !navigator.onLine) {
-            console.log('You are in offline mode and response of request is not cached! This is request:');
-            console.log(request);
+            console.log(`You are in offline mode and response of request is not cached! This is request: ${request}`);
         } else{
-            console.log('Fetching request filed :(. This is request:');
-            console.log(request);   
+            console.log(`Fetching request filed :(. This is request: ${request}`);      
         }
+        console.log(`Error obj: ${err}`);
     });
 }
