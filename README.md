@@ -2,6 +2,15 @@
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
 
+## Project installation:
+
+For installation of this project following steps are required:
+1. Install GraphicMagic (GM) on your machine. You can download it here: `http://www.graphicsmagick.org/`.
+2. Make sure you open new instance of terminal after GM installation.
+3. Run command `npm install -g grunt-cli`.
+4. Install all project dependencies with - run cmd in terminal `npm install`.
+5. Run application in HTTP server.
+
 ## Project Overview: Stage 1
 
 For the **Restaurant Reviews** projects, you will incrementally convert a static webpage to a mobile-ready web application. In **Stage One**, you will take a static design that lacks accessibility and convert the design to be responsive on different sized displays and accessible for screen reader use. You will also add a service worker to begin the process of creating a seamless offline experience for your users.
