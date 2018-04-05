@@ -210,24 +210,27 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
     width: 100%;
   }
   .inside #map-container {
+    position: relative;
     top: 131px;
-    height: 37%;
+    height: 37vh;
     width: 100%;
-    z-index: 1000;
   }
   .inside #footer {
     width: calc(100% - 50px)
   }
   .inside #restaurant-container {
-    padding: calc(51px + 80px + 37vh) 40px 30px;
+    padding: calc(51px + 80px) 40px 30px;
     width: calc(100% - 2*40px);
   }
 }
 @media screen and (min-width: 680px){
   .inside #map-container {
+    position: -webkit-sticky;
+    position: sticky;    
     top: 80px;
-    height: calc(100% - 80px);
+    height: calc(100vh - 80px);
     width: 50%;
+    float: right;
   }
   .inside #footer {
     width: calc(50% - 50px);;
@@ -250,8 +253,6 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 .inside #map-container {
   background: blue none repeat scroll 0 0;
-  position: fixed;
-  right: 0;
 }
 .inside #map {
   background-color: #ccc;
