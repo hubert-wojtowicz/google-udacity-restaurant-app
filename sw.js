@@ -5,6 +5,8 @@ const pictureSufixes = ['-270min1x.jpg', '-540min2x.jpg', '-800.jpg'];
 var picturesToCache = pictureNames('img-resized/');
 const urlsToCache = [
     '/',
+    '/index.js',
+    '/sw.js',
     '/index.html',
     '/restaurant.html',
     'js/dbhelper.js',
@@ -52,20 +54,29 @@ self.addEventListener('activate',(event)=>{
 self.addEventListener('fetch', function(event) {
     event.respondWith(
       caches.open(cacheName).then(function(cache) {
-        return cache.match(event.request).then(function (response) {
-          return response || fetch(event.request).then(function(response) {
-                cache.put(event.request, response.clone());
-                return response;
-            }).catch(()=>{
-                if(navigator && !navigator.onLine) {
-                    console.log('You are in offline mode and response of request is not cached! This is request:');
-                    console.log(event.request);
-                } else{
-                    console.log('Fetching request filed :(. This is request:');
-                    console.log(event.request);   
-                }
-            });
-        });
+        const url = new URL(event.request.url);
+        if(url.pathname.startsWith('/restaurant.html')) {
+            debugger;
+            return cache.match('/restaurant.html').then(response => response || fetchReq(event.request));
+        }
+
+        return cache.match(event.request).then(
+            response => response || fetchReq(event.request));
       })
     );
   });
+
+function fetchReq(request){
+    return fetch(request).then(function(response) {
+        cache.put(request, response.clone());
+        return response;
+    }).catch(()=>{
+        if(navigator && !navigator.onLine) {
+            console.log('You are in offline mode and response of request is not cached! This is request:');
+            console.log(request);
+        } else{
+            console.log('Fetching request filed :(. This is request:');
+            console.log(request);   
+        }
+    });
+}
