@@ -1,8 +1,9 @@
-// mixed update on reload with static cache
+// mixed 'update on reload' service worker pattern with static cache
 
 var cacheName = 'mws-restaurant-v1';
 var urlsToCache = [
     '/',
+    '/index.html',
     'js/dbhelper.js',
     'js/main.js',
     'js/dbhelper.js',
