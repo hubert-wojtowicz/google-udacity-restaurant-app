@@ -1,9 +1,12 @@
-// mixed 'update on reload' service worker pattern with static cache
+// mixed 'on network response' service worker pattern(https://jakearchibald.com/2014/offline-cookbook/#on-network-response) with static cache
 
-var cacheName = 'mws-restaurant-v1';
-var urlsToCache = [
+const cacheName = 'mws-restaurant-v1';
+const pictureSufixes = ['-270min1x.jpg', '-540min2x.jpg', '-800.jpg'];
+var picturesToCache = pictureNames('img-resized/');
+const urlsToCache = [
     '/',
     '/index.html',
+    '/restaurant.html',
     'js/dbhelper.js',
     'js/main.js',
     'js/dbhelper.js',
@@ -12,10 +15,21 @@ var urlsToCache = [
     'data/restaurants.json',
 ];
 
+function pictureNames(path) {
+    let names = new Array();
+    const numberOfPict = 10;
+    for(let i=1;i<=10;i++) {
+        pictureSufixes.forEach((val, index)=>{
+            names.push(`${path}${i}${val}`)
+        })
+    }
+    return names;
+}
+
 self.addEventListener('install',(event)=>{
     event.waitUntil(
         caches.open(cacheName).then((cache)=>{
-            return cache.addAll(urlsToCache);
+            return cache.addAll(urlsToCache.concat(picturesToCache));
         })
     );
 });
