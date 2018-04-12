@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 71.437498 53.710418"
+   height="203"
+   width="270">
+  <title
+     id="title7766">No image availiable</title>
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient7762">
+      <stop
+         id="stop7758"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1;" />
+      <stop
+         id="stop7760"
+         offset="1"
+         style="stop-color:#ffffff;stop-opacity:0;" />
+    </linearGradient>
+    <radialGradient
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1,0,0,1.019744,0,-5.3383955)"
+       r="9.7270628"
+       fy="270.38092"
+       fx="36.034142"
+       cy="270.38092"
+       cx="36.034142"
+       id="radialGradient7764"
+       xlink:href="#linearGradient7762" />
+  </defs>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>No image availiable</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Hubert Wójtowicz</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:date>12.04.2018</dc:date>
+        <dc:language>en-EN</dc:language>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     style="display:inline;opacity:1"
+     transform="translate(0,-243.28957)"
+     id="layer1">
+    <g
+       style="stroke-width:0.88235408"
+       transform="matrix(1.1194435,0,0,1.1473926,-4.5399868,-40.208691)"
+       id="g4523">
+      <rect
+         style="opacity:1;fill:#000000;fill-opacity:0.96268652;fill-rule:evenodd;stroke:#000000;stroke-width:0;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.99253732"
+         id="rect4519"
+         width="22.854727"
+         height="12.956485"
+         x="24.817545"
+         y="264.21341"
+         ry="2.5530088"
+         rx="3.1232216" />
+      <ellipse
+         ry="0.5065465"
+         rx="0.55711675"
+         cy="266.45175"
+         cx="45.479099"
+         id="path6381"
+         style="opacity:1;fill:#ffffff;fill-opacity:0.6268657;fill-rule:evenodd;stroke:#000000;stroke-width:2.11764974;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.99253732" />
+    </g>
+    <ellipse
+       ry="8.5691137"
+       rx="8.3770628"
+       cy="270.38092"
+       cx="36.034142"
+       id="path4527"
+       style="opacity:1;fill:url(#radialGradient7764);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:2.7;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.99253732" />
+    <g
+       style="display:inline;opacity:1;stroke-width:1.07204247"
+       transform="matrix(0.93286958,0,0,0.93272824,2.6062472,-18.853653)"
+       id="g4523-4">
+      <text
+         transform="scale(0.9999243,1.0000757)"
+         id="text7619-2"
+         y="291.509"
+         x="21.220806"
+         style="font-style:normal;font-weight:normal;font-size:11.34578228px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.304079"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.304079"
+           y="291.509"
+           x="21.220806"
+           id="tspan7617-8">Ups...</tspan></text>
+    </g>
+    <text
+       id="text7676"
+       y="291.44373"
+       x="11.566072"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       xml:space="preserve"><tspan
+         style="stroke-width:0.26458332"
+         y="291.44373"
+         x="11.566072"
+         id="tspan7674">no image</tspan></text>
+    <rect
+       ry="0"
+       rx="0"
+       y="243.13837"
+       x="-0.18898807"
+       height="54.239609"
+       width="72.098961"
+       id="rect7770"
+       style="opacity:1;fill:#ffffff;fill-opacity:0.84210528;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.99253732" />
+  </g>
+</svg>

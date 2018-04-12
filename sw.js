@@ -72,8 +72,7 @@ function fetchReq(request, cache){
     return fetch(request).then(function(response) {
         cache.put(request, response.clone());
         return response;
-    }).catch((err)=>{
-        debugger;
+    }).catch((err) => {
         if(navigator && !navigator.onLine) {
             console.log(`You are in offline mode and response of request is not cached! This is request: ${request}`);
         } else{

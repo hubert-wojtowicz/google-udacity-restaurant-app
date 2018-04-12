@@ -160,6 +160,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   min-height: 380px;
   padding: 5px 30px 0;
   text-align: center;
+  vertical-align: top;
   max-width: 270px;
 }
 #restaurants-list .restaurant-img {
