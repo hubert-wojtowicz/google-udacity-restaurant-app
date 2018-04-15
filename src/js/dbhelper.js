@@ -1,3 +1,5 @@
+import idb from 'idb';
+
 /**
  * Common database helper functions.
  */
