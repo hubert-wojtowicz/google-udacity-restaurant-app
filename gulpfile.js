@@ -1,39 +1,28 @@
-var clean = require('gulp-clean');
-var gulp = require('gulp');
-var imageResize = require('gulp-image-resize');
-var os = require('os');
-var parallel = require('concurrent-transform');
-var rename = require('gulp-rename');
+const browserify = require('browserify'),
+    clean = require('gulp-clean'),
+    gulp = require('gulp'),
+    imageResize = require('gulp-image-resize'),
+    mergeStream = require('merge-stream'),
+    os = require('os'),
+    parallel = require('concurrent-transform'),
+    rename = require('gulp-rename');
 
-gulp.task('clean-dev',()=>{
+gulp.task('clean-dev',() => {
     gulp.src('build/dev')
     .pipe(clean());
 })
 
-gulp.task('copy-html-dev', ()=>{
-    gulp.src(['src/*.html'])
-    .pipe(gulp.dest('build/dev'));
+gulp.task('copy-dev', ['resize-img-dev'], () => {
+    return mergeStream(
+        gulp.src(['src/*.html']).pipe(gulp.dest('build/dev')),
+        gulp.src(['src/img/*.svg']).pipe(gulp.dest('build/dev/img')),
+        gulp.src(['src/*.js']).pipe(gulp.dest('build/dev')),
+        gulp.src(['src/js/*.js']).pipe(gulp.dest('build/dev/js')),
+        gulp.src(['src/css/*.css']).pipe(gulp.dest('build/dev/css'))
+    ); 
 });
 
-gulp.task('copy-svg-dev', ()=>{
-    gulp.src(['src/img/*.svg'])
-    .pipe(gulp.dest('build/dev/img'));
-});
-
-gulp.task('copy-js-dev', ()=>{
-    gulp.src(['src/*.js'])
-    .pipe(gulp.dest('build/dev'));
-
-    gulp.src(['src/js/*.js'])
-    .pipe(gulp.dest('build/dev/js'));
-});
-
-gulp.task('copy-css-dev', ()=>{
-    gulp.src(['src/css/*.css'])
-    .pipe(gulp.dest('build/dev/css'));
-});
-
-gulp.task('resize-img-dev', ()=>{
+gulp.task('resize-img-dev', () => {
 
     const imgDescs = [
         {
@@ -50,7 +39,7 @@ gulp.task('resize-img-dev', ()=>{
         }
     ];
         
-    imgDescs.forEach((imgDesc)=>{
+    imgDescs.forEach((imgDesc) => {
         gulp.src("src/img/*.{jpg,png}")
         .pipe(parallel(
           imageResize({ width : imgDesc.size }),
@@ -62,4 +51,33 @@ gulp.task('resize-img-dev', ()=>{
       
   });
 
-gulp.task('default',  ['copy-html-dev', 'copy-svg-dev', 'resize-img-dev', 'copy-js-dev', 'copy-css-dev']);
+function createBundle(src) {
+    if (!src.push) {
+        src = [src];
+    }
+
+    var customOpts = {
+        entries: src,
+        debug: true
+    };
+    var opts = assign({}, watchify.args, customOpts);
+    var b = watchify(browserify(opts));
+
+    b.transform(babelify.configure({
+        stage: 1
+    }));
+
+    b.transform(hbsfy);
+    b.on('log', plugins.util.log);
+    return b;
+}
+  
+  
+const jsBundles = {
+    'js/app.js' : createBundle();
+};
+
+
+gulp.task('default',  ['copy-dev'], () => {
+    
+});
