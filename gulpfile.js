@@ -15,6 +15,10 @@ gulp.task('copy-html-dev', ()=>{
     .pipe(gulp.dest('build/dev'));
 });
 
+gulp.task('copy-svg-dev',()=>{
+    gulp.src(['src/img/*.svg'])
+    .pipe(gulp.dest('build/dev/img'));
+});
 
 gulp.task('resize-img-dev', function () {
 
