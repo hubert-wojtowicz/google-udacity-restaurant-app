@@ -15,12 +15,25 @@ gulp.task('copy-html-dev', ()=>{
     .pipe(gulp.dest('build/dev'));
 });
 
-gulp.task('copy-svg-dev',()=>{
+gulp.task('copy-svg-dev', ()=>{
     gulp.src(['src/img/*.svg'])
     .pipe(gulp.dest('build/dev/img'));
 });
 
-gulp.task('resize-img-dev', function () {
+gulp.task('copy-js-dev', ()=>{
+    gulp.src(['src/*.js'])
+    .pipe(gulp.dest('build/dev'));
+
+    gulp.src(['src/js/*.js'])
+    .pipe(gulp.dest('build/dev/js'));
+});
+
+gulp.task('copy-css-dev', ()=>{
+    gulp.src(['src/css/*.css'])
+    .pipe(gulp.dest('build/dev/css'));
+});
+
+gulp.task('resize-img-dev', ()=>{
 
     const imgDescs = [
         {
@@ -49,4 +62,4 @@ gulp.task('resize-img-dev', function () {
       
   });
 
-gulp.task('default',  ['copy-html-dev', 'copy-svg-dev', 'resize-img-dev']);
+gulp.task('default',  ['copy-html-dev', 'copy-svg-dev', 'resize-img-dev', 'copy-js-dev', 'copy-css-dev']);
