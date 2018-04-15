@@ -21,7 +21,6 @@ gulp.task('copy-svg-dev',()=>{
 });
 
 gulp.task('resize-img-dev', function () {
-
     const imgDescs = [
         {
             size: 270,
@@ -40,11 +39,12 @@ gulp.task('resize-img-dev', function () {
     imgDescs.forEach((imgDesc)=>{
         gulp.src("src/img/*.{jpg,png}")
         .pipe(parallel(
-          imageResize({ width : imgDesc.size }),
-          os.cpus().length
+            imageResize({ width : imgDesc.size }),
+            os.cpus().length
         ))
         .pipe(rename(function (path) { path.basename += imgDesc.suffix; }))
         .pipe(gulp.dest("build/dev/img"));
-    })
-      
-  });
+    })    
+});
+
+gulp.task('default',  ['copy-html-dev', 'copy-svg-dev', 'resize-img-dev']);
