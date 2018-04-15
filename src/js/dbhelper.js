@@ -148,11 +148,11 @@ class DBHelper {
    */
   static imageUrlForRestaurant(restaurant = null, resizeVersion = null) {
     if(!restaurant || !restaurant.photograph)
-      return `/img-resized/noImage.svg`;
+      return `/img/noImage.svg`;
 
     return resizeVersion ? 
-    `/img-resized/${restaurant.photograph}${resizeVersion}.jpg` :
-    `/img-resized/${restaurant.photograph}.jpg` ;
+    `/img/${restaurant.photograph}${resizeVersion}.jpg` :
+    `/img/${restaurant.photograph}.jpg` ;
   }
 
   /**
