@@ -48,3 +48,5 @@ gulp.task('resize-img-dev', function () {
     })
       
   });
+
+gulp.task('default',  ['copy-html-dev', 'copy-svg-dev', 'resize-img-dev']);
