@@ -1,7 +1,8 @@
-#node packages
+# node packages
 node_modules/
 
-#grunt resized pictures
+# grunt resized pictures
 img-resized/
 
+# those files will not be tracked as long as they can be generated with build process
 build/

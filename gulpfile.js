@@ -1,26 +1,33 @@
-var clean = require('gulp-clean');
+var del = require('del');
 var gulp = require('gulp');
 var imageResize = require('gulp-image-resize');
 var os = require('os');
 var parallel = require('concurrent-transform');
 var rename = require('gulp-rename');
+var log = require('fancy-log');
+var runSequence = require('run-sequence');
 
-gulp.task('clean-dev',()=>{
-    gulp.src('build/dev')
-    .pipe(clean());
+const isProd = () => {
+    var args = process.argv.find(x => x.includes('--prod'));
+    return args ? true : false;
+};
+const dest = isProd() ? 'prod' : 'dev';
+
+gulp.task('clean', () => {
+    return del(['build']);
 })
 
-gulp.task('copy-html-dev', ()=>{
-    gulp.src(['src/*.html'])
-    .pipe(gulp.dest('build/dev'));
+gulp.task('copy-html', () => {
+    return gulp.src(['src/*.html'])
+    .pipe(gulp.dest(`build/`));
 });
 
-gulp.task('copy-svg-dev',()=>{
-    gulp.src(['src/img/*.svg'])
-    .pipe(gulp.dest('build/dev/img'));
+gulp.task('copy-svg', () => {
+    return gulp.src(['src/img/*.svg'])
+    .pipe(gulp.dest(`build/img`));
 });
 
-gulp.task('resize-img-dev', function () {
+gulp.task('copy-resized-imgs', (done) => {
     const imgDescs = [
         {
             size: 270,
@@ -43,8 +50,16 @@ gulp.task('resize-img-dev', function () {
             os.cpus().length
         ))
         .pipe(rename(function (path) { path.basename += imgDesc.suffix; }))
-        .pipe(gulp.dest("build/dev/img"));
-    })    
+        .pipe(gulp.dest("build/img"));
+    });
+    done();    
 });
 
-gulp.task('default',  ['copy-html-dev', 'copy-svg-dev', 'resize-img-dev']);
+gulp.task('default', (done) => {
+    log(`Start deploying to ${dest}...`);
+    
+    if(!isProd())
+        log.info(`In order to deploy to prod attach '--prod' param to build command.`);
+
+    runSequence('clean', ['copy-html', 'copy-svg', 'copy-resized-imgs'], done);
+});
