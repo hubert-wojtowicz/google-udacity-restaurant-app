@@ -75,7 +75,7 @@ const createBoundle = (src) => {
 
     var customOpts = {
         entries: src,
-        debug: true
+        debug: !isProd()
     };
     var opts = assign({}, watchify.args, customOpts);
     var b = watchify(browserify(opts));
@@ -97,7 +97,7 @@ const bundle = (b, outputPath) => {
       // optional, remove if you don't need to buffer file contents
     .pipe(buffer())
     // optional, remove if you dont want sourcemaps
-    .pipe(plugins.sourcemaps.init({loadMaps: true})) // loads map from browserify file
+    .pipe(plugins.sourcemaps.init({loadMaps: !isProd()})) // loads map from browserify file
        // Add transformation tasks to the pipeline here.
     .pipe(plugins.sourcemaps.write('./')) // writes .map file
     .pipe(gulp.dest(outputDir));
