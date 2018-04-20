@@ -30,6 +30,11 @@ gulp.task('copy-html', () => {
     .pipe(gulp.dest(`build/`));
 });
 
+gulp.task('copy-css',() => {
+    return gulp.src(['src/css/**/*.css'])
+    .pipe(gulp.dest(`build/css/`));
+})
+
 gulp.task('copy-svg', () => {
     return gulp.src(['src/img/*.svg'])
     .pipe(gulp.dest(`build/img`));
@@ -120,5 +125,5 @@ gulp.task('default', (done) => {
     if(!isProd())
         log.info(`In order to deploy to prod attach '--prod' param to build command.`);
 
-    runSequence('clean', ['copy-html', 'copy-svg', 'copy-resized-imgs', 'js'], done);
+    runSequence('clean', ['copy-html', 'copy-css', 'copy-svg', 'copy-resized-imgs', 'js'], done);
 });
