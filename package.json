@@ -18,6 +18,7 @@
   "homepage": "https://github.com/hubert-wojtowicz/mws-restaurant-stage-1#readme",
   "devDependencies": {
     "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "babelify": "^8.0.0",
     "browserify": "^16.2.0",
     "concurrent-transform": "^1.0.0",
@@ -38,5 +39,7 @@
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "idb": "^2.1.1"
+  }
 }

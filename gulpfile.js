@@ -80,7 +80,7 @@ const createBoundle = (src) => {
     var opts = assign({}, watchify.args, customOpts);
     var b = watchify(browserify(opts));
 
-    b.transform(babelify);
+    b.transform(babelify.configure({presets: ['env']}));
 
     return b;
 };
@@ -119,11 +119,22 @@ gulp.task('js', function () {
     );
 });
 
+gulp.task('watch', () => {
+    gulp.watch(['build/**/*.js'], ['js']);
+
+    Object.keys(jsBundles).forEach(function(key) {
+        var b = jsBundles[key];
+        b.on('update', function() {
+          return bundle(b, key);
+        });
+    });
+});
+
 gulp.task('default', (done) => {
     log(`Start deploying to ${dest}...`);
 
     if(!isProd())
         log.info(`In order to deploy to prod attach '--prod' param to build command.`);
 
-    runSequence('clean', ['copy-html', 'copy-css', 'copy-svg', 'copy-resized-imgs', 'js'], done);
+    runSequence('clean', ['copy-html', 'copy-css', 'copy-svg', 'copy-resized-imgs', 'js'], 'watch', done);
 });
