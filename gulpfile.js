@@ -105,10 +105,6 @@ const bundle = (b, outputPath) => {
 
 var jsBundles = {
     './build/index.js' : createBoundle('./src/js/index.js'),
-    './build/sw.js' : createBoundle('./src/js/sw.js'),
-    './build/js/dbhelper.js' : createBoundle('./src/js/dbhelper.js'),
-    './build/js/main.js' : createBoundle('./src/js/main.js'),
-    './build/js/restaurant_info.js' : createBoundle('./src/js/restaurant_info.js')
 };
 
 gulp.task('js', function () {
