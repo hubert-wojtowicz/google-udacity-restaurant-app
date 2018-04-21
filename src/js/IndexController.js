@@ -1,3 +1,5 @@
+import MainPage from "./main";
+
 export default class IndexController {
     constructor() {
       this._registerServiceWorker();
@@ -21,8 +23,9 @@ export default class IndexController {
         let restaurantId = this._getRestaurantIdFromCurrentLocation();
         if(restaurantId) {
             console.log('szczegóły restauracji o id = ' + restaurantId );
-        } else {
+          } else {
             console.log('Ogólny widok.');
+            this.page = new MainPage();
         }
     }
 
