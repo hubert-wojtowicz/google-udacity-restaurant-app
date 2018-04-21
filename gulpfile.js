@@ -1,36 +1,46 @@
-const assign = require('lodash.assign'),
-    browserify = require('browserify'),
-    babelify = require('babelify'),
-    buffer = require('vinyl-buffer'),
-    clean = require('gulp-clean'),
-    gulp = require('gulp'),
-    gutil = require('gulp-util'),
-    imageResize = require('gulp-image-resize'),
-    mergeStream = require('merge-stream'),
-    os = require('os'),
-    parallel = require('concurrent-transform'),
-    rename = require('gulp-rename'),
-    source = require('vinyl-source-stream'),
-    sourcemaps = require('gulp-sourcemaps'),
-    uglify = require('gulp-uglify'),
-    watchify = require('watchify');
+var del = require('del');
+var gulp = require('gulp');
+var imageResize = require('gulp-image-resize');
+var os = require('os');
+var parallel = require('concurrent-transform');
+var rename = require('gulp-rename');
+var log = require('fancy-log');
+var runSequence = require('run-sequence');
+var mergeStream = require('merge-stream');
+var assign = require('lodash.assign');
+var watchify = require('watchify');
+var browserify = require('browserify');
+var babelify = require('babelify');
+var plugins = require('gulp-load-plugins')();
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
 
-gulp.task('clean-dev',() => {
-    gulp.src('build/dev')
-    .pipe(clean());
+const isProd = () => {
+    var args = process.argv.find(x => x.includes('--prod'));
+    return args ? true : false;
+};
+const dest = isProd() ? 'prod' : 'dev';
+
+gulp.task('clean', () => {
+    return del(['build']);
 })
 
-gulp.task('copy-dev', ['resize-img-dev'], () => {
-    return mergeStream(
-        gulp.src(['src/*.html']).pipe(gulp.dest('build/dev')),
-        gulp.src(['src/img/*.svg']).pipe(gulp.dest('build/dev/img')),
-        gulp.src(['src/*.js']).pipe(gulp.dest('build/dev')),
-        gulp.src(['src/js/main.js', 'src/js/restaurant_info.js']).pipe(gulp.dest('build/dev/js')),
-        gulp.src(['src/css/*.css']).pipe(gulp.dest('build/dev/css'))
-    ); 
+gulp.task('copy-html', () => {
+    return gulp.src(['src/*.html'])
+    .pipe(gulp.dest(`build/`));
 });
 
-gulp.task('resize-img-dev', () => {
+gulp.task('copy-css',() => {
+    return gulp.src(['src/css/**/*.css'])
+    .pipe(gulp.dest(`build/css/`));
+})
+
+gulp.task('copy-svg', () => {
+    return gulp.src(['src/img/*.svg'])
+    .pipe(gulp.dest(`build/img`));
+});
+
+gulp.task('copy-resized-imgs', (done) => {
     const imgDescs = [
         {
             size: 270,
@@ -49,45 +59,78 @@ gulp.task('resize-img-dev', () => {
     imgDescs.forEach((imgDesc) => {
         gulp.src("src/img/*.{jpg,png}")
         .pipe(parallel(
-          imageResize({ width : imgDesc.size }),
-          os.cpus().length
+            imageResize({ width : imgDesc.size }),
+            os.cpus().length
         ))
         .pipe(rename(function (path) { path.basename += imgDesc.suffix; }))
-        .pipe(gulp.dest("build/dev/img"));
-    })  
+        .pipe(gulp.dest("build/img"));
+    });
+    done();    
 });
 
-var customOpts = {
-    entries: ['./src/js/dbhelper.js'],
-    debug: true,
-    transform: [babelify.configure({
-        presets: ["es2015"]})]
+const createBoundle = (src) => {
+    if (!src.push) {
+        src = [src];
+    }
+
+    var customOpts = {
+        entries: src,
+        debug: !isProd()
+    };
+    var opts = assign({}, watchify.args, customOpts);
+    var b = watchify(browserify(opts));
+
+    b.transform(babelify.configure({presets: ['env']}));
+
+    return b;
 };
-var opts = assign({}, watchify.args, customOpts);
-var b = watchify(browserify(opts));
 
-gulp.task('js', boundle);
-b.on('update', boundle);
-b.on('log', gutil.log);
+const bundle = (b, outputPath) => {
+  var splitPath = outputPath.split('/');
+  var outputFile = splitPath[splitPath.length - 1];
+  var outputDir = splitPath.slice(0, -1).join('/');
 
-function boundle() {
-    return b.bundle()
+  return b.bundle()
     // log errors if they happen
-    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-    .pipe(source('./src/js/dbhelper.js'))
+    .on('error', log.bind(plugins.util, 'Browserify Error'))
+      .pipe(source(outputFile))
+      // optional, remove if you don't need to buffer file contents
     .pipe(buffer())
-    // optional, remove if you don't need to buffer file content
-    .pipe(sourcemaps.init({loadMaps: true})) //load map from browserify file
-    // add transformation task to the pipeline here
-    .pipe(gutil.env.type === 'production' ? uglify() : gutil.noop())
-    .pipe(rename({
-        dirname: ''
-    }))
-    .pipe(sourcemaps.write('./build/dev/js'))
-    .pipe(gulp.dest('./build/dev/js'))
-    .pipe(gutil.env.type === 'production' ? uglify() : gutil.noop());
-}
+    // optional, remove if you dont want sourcemaps
+    .pipe(plugins.sourcemaps.init({loadMaps: !isProd()})) // loads map from browserify file
+       // Add transformation tasks to the pipeline here.
+    .pipe(plugins.sourcemaps.write('./')) // writes .map file
+    .pipe(gulp.dest(outputDir));
+};
 
-gulp.task('default',  ['copy-dev', 'js'], () => {
-    
+var jsBundles = {
+    './build/index.js' : createBoundle('./src/js/index.js'),
+};
+
+gulp.task('js', function () {
+    return mergeStream.apply(null,
+        Object.keys(jsBundles).map(function(key) {
+            return bundle(jsBundles[key], key);
+        })
+    );
+});
+
+gulp.task('watch', () => {
+    gulp.watch(['build/**/*.js'], ['js']);
+
+    Object.keys(jsBundles).forEach(function(key) {
+        var b = jsBundles[key];
+        b.on('update', function() {
+          return bundle(b, key);
+        });
+    });
+});
+
+gulp.task('default', (done) => {
+    log(`Start deploying to ${dest}...`);
+
+    if(!isProd())
+        log.info(`In order to deploy to prod attach '--prod' param to build command.`);
+
+    runSequence('clean', ['copy-html', 'copy-css', 'copy-svg', 'copy-resized-imgs', 'js'], 'watch', done);
 });
