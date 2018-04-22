@@ -1,4 +1,6 @@
 import MainPage from "./main";
+import RestaurantInfoPage from "./restaurant_info";
+import Helpers from "./helpers";
 
 export default class IndexController {
     constructor() {
@@ -20,16 +22,13 @@ export default class IndexController {
     };
 
     routingControl() {
-        let restaurantId = this._getRestaurantIdFromCurrentLocation();
+        let restaurantId = Helpers.getParameterByName('id', window.location.href);
         if(restaurantId) {
             console.log('szczegóły restauracji o id = ' + restaurantId );
+            this.page = new RestaurantInfoPage();
           } else {
             console.log('Ogólny widok.');
             this.page = new MainPage();
         }
-    }
-
-    _getRestaurantIdFromCurrentLocation() {
-        return (new URL(document.location)).search.split('=')[1];
     }
   }
