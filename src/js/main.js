@@ -30,6 +30,12 @@ export default class MainPage {
       });
       this.updateRestaurants();
     }
+
+    let nSel =  document.getElementById('neighborhoods-select');
+    let cSel =  document.getElementById('cuisines-select');
+    
+    nSel.addEventListener('change',() => this.updateRestaurants());
+    cSel.addEventListener('change',() => this.updateRestaurants());
   }
   
   /**
