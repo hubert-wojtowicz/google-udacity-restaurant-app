@@ -55,7 +55,7 @@ gulp.task('copy-resized-imgs', (done) => {
             suffix: '-800'
         }
     ];
-        
+    
     imgDescs.forEach((imgDesc) => {
         gulp.src("src/img/*.{jpg,png}")
         .pipe(parallel(
@@ -68,21 +68,26 @@ gulp.task('copy-resized-imgs', (done) => {
     done();    
 });
 
-const createBoundle = (src) => {
+var createBundle = (src) => {
     if (!src.push) {
         src = [src];
     }
-
+    
     var customOpts = {
         entries: src,
         debug: !isProd()
     };
     var opts = assign({}, watchify.args, customOpts);
     var b = watchify(browserify(opts));
-
+    
     b.transform(babelify.configure({presets: ['env']}));
-
+    
     return b;
+}
+
+var jsBundles = {
+    './build/index.js': createBundle('./src/js/index.js'),
+    './build/sw.js': createBundle('./src/js/sw.js')
 };
 
 const bundle = (b, outputPath) => {
@@ -101,11 +106,7 @@ const bundle = (b, outputPath) => {
        // Add transformation tasks to the pipeline here.
     .pipe(plugins.sourcemaps.write('./')) // writes .map file
     .pipe(gulp.dest(outputDir));
-};
-
-var jsBundles = {
-    './build/index.js' : createBoundle('./src/js/index.js'),
-};
+}
 
 gulp.task('js', () => {
     return mergeStream.apply(null,
@@ -115,13 +116,13 @@ gulp.task('js', () => {
     );
 });
 
-gulp.task('sw', () => {
-   return gulp.src('src/js/sw.js')
-    .pipe(gulp.dest('build/'));
-});
+// gulp.task('sw', () => {
+//    return gulp.src('src/js/sw.js')
+//     .pipe(gulp.dest('build/'));
+// });
 
 gulp.task('watch', () => {
-    gulp.watch(['src/**/*.js'], ['js','sw']);
+    gulp.watch(['src/**/*.js'], ['js']);
     gulp.watch(['src/**/*.html'], ['copy-html']);
 
     Object.keys(jsBundles).forEach((key) => {
@@ -136,5 +137,5 @@ gulp.task('default', (done) => {
     if(!isProd())
         log.info(`In order to deploy to prod attach '--prod' param to build command.`);
 
-    runSequence('clean', ['copy-html', 'copy-css', 'copy-svg', 'copy-resized-imgs', 'sw', 'js'], 'watch', done);
+    runSequence('clean', ['copy-html', 'copy-css', 'copy-svg', 'copy-resized-imgs', 'js'], 'watch', done);
 });
