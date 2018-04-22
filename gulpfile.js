@@ -107,7 +107,7 @@ var jsBundles = {
     './build/index.js' : createBoundle('./src/js/index.js'),
 };
 
-gulp.task('js', function () {
+gulp.task('js', () => {
     return mergeStream.apply(null,
         Object.keys(jsBundles).map(function(key) {
             return bundle(jsBundles[key], key);
@@ -115,15 +115,18 @@ gulp.task('js', function () {
     );
 });
 
+gulp.task('sw', () => {
+   return gulp.src('src/js/sw.js')
+    .pipe(gulp.dest('build/'));
+});
+
 gulp.task('watch', () => {
-    gulp.watch(['build/**/*.js'], ['js']);
+    gulp.watch(['src/**/*.js'], ['js','sw']);
     gulp.watch(['src/**/*.html'], ['copy-html']);
 
-    Object.keys(jsBundles).forEach(function(key) {
+    Object.keys(jsBundles).forEach((key) => {
         var b = jsBundles[key];
-        b.on('update', function() {
-          return bundle(b, key);
-        });
+        b.on('update', () => bundle(b, key));
     });
 });
 
@@ -133,5 +136,5 @@ gulp.task('default', (done) => {
     if(!isProd())
         log.info(`In order to deploy to prod attach '--prod' param to build command.`);
 
-    runSequence('clean', ['copy-html', 'copy-css', 'copy-svg', 'copy-resized-imgs', 'js'], 'watch', done);
+    runSequence('clean', ['copy-html', 'copy-css', 'copy-svg', 'copy-resized-imgs', 'sw', 'js'], 'watch', done);
 });
