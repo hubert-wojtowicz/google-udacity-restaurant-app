@@ -10,10 +10,10 @@ export default class MainPage {
     /**
      * Fetch neighborhoods and cuisines as soon as the page is loaded.
      */
-    document.addEventListener('DOMContentLoaded', (event) => {
-      this.fetchNeighborhoods();
-      this.fetchCuisines();
-    });
+    // document.addEventListener('DOMContentLoaded', (event) => {
+    //   this.fetchNeighborhoods();
+    //   this.fetchCuisines();
+    // });
         
     /**
      * Initialize Google map, called from HTML.

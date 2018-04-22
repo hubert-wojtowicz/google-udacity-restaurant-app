@@ -1,6 +1,6 @@
-import MainPage from "./main";
-import RestaurantInfoPage from "./restaurant_info";
-import Helpers from "./helpers";
+import MainPage from './main';
+import RestaurantInfoPage from './restaurant_info';
+import Helpers from './helpers';
 
 export default class IndexController {
     constructor() {
@@ -10,14 +10,17 @@ export default class IndexController {
     
     _registerServiceWorker() {
       if(!navigator.serviceWorker) {
-        console.log("Service worker mechanism is not availiable");
+        console.log('Service worker mechanism is not availiable');
         return;
       }
-      navigator.serviceWorker.register("sw.js").then((registration)=>{
-        console.log("Registered successfully!");
-        console.log(registration);
+      
+      navigator.serviceWorker.register('/sw.js').then((registration) => {
+        // service worker is already installed
+        if(!navigator.serviceWorker.controller) return;
+        
+        console.log(`Registered successfully: ${registration}`);
       }).catch((err)=>{
-        console.log(err);
+        console.log(`Registration failed: ${err}`);
       });
     };
 
