@@ -17,11 +17,13 @@ var buffer = require('vinyl-buffer');
 var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
 
-const isProd = () => {
-    var args = process.argv.find(x => x.includes('--prod'));
-    return args ? true : false;
+var isPr = null;
+const isProduction = () => {
+    if(isPr != null) return isPr;
+    process.argv.find(x => x.includes('--prod')) ? isPr = true: isPr = false;
+    return isPr;
 };
-const dest = isProd() ? 'prod' : 'dev';
+const dest = isProduction() ? 'prod' : 'dev';
 
 gulp.task('clean', () => {
     return del(['build']);
@@ -77,7 +79,7 @@ var createBundle = (src) => {
     
     var customOpts = {
         entries: src,
-        debug: !isProd()
+        debug: !isProduction()
     };
     var opts = assign({}, watchify.args, customOpts);
     var b = watchify(browserify(opts));
@@ -104,11 +106,11 @@ const bundle = (b, outputPath) => {
     // optional, remove if you don't need to buffer file contents
     .pipe(buffer())
     // uglify js files
-    .pipe(isProd() ? uglify() : gutil.noop())
+    .pipe(isProduction() ? uglify() : gutil.noop())
     // optional, remove if you dont want sourcemaps
-    .pipe(plugins.sourcemaps.init({loadMaps: !isProd()})) // loads map from browserify file
+    .pipe(!isProduction() ? plugins.sourcemaps.init({loadMaps: true}) : gutil.noop()) // loads map from browserify file
     // Add transformation tasks to the pipeline here.
-    .pipe(plugins.sourcemaps.write('./')) // writes .map file
+    .pipe(!isProduction() ? plugins.sourcemaps.write('./') : gutil.noop()) // writes .map file
     .pipe(gulp.dest(outputDir));
 }
 
@@ -133,7 +135,7 @@ gulp.task('watch', () => {
 gulp.task('default', (done) => {
     log(`Start deploying to ${dest}...`);
 
-    if(!isProd())
+    if(!isProduction())
         log.info(`In order to deploy to prod attach '--prod' param to build command.`);
 
     runSequence('clean', ['copy-html', 'copy-css', 'copy-svg', 'copy-resized-imgs', 'js'], 'watch', done);
