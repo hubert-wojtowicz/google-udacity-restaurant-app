@@ -14,6 +14,8 @@ var babelify = require('babelify');
 var plugins = require('gulp-load-plugins')();
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
+var gutil = require('gulp-util');
+var uglify = require('gulp-uglify');
 
 const isProd = () => {
     var args = process.argv.find(x => x.includes('--prod'));
@@ -81,7 +83,7 @@ var createBundle = (src) => {
     var b = watchify(browserify(opts));
     
     b.transform(babelify.configure({presets: ['env']}));
-    
+
     return b;
 }
 
@@ -98,12 +100,14 @@ const bundle = (b, outputPath) => {
   return b.bundle()
     // log errors if they happen
     .on('error', log.bind(plugins.util, 'Browserify Error'))
-      .pipe(source(outputFile))
-      // optional, remove if you don't need to buffer file contents
+    .pipe(source(outputFile))
+    // optional, remove if you don't need to buffer file contents
     .pipe(buffer())
+    // uglify js files
+    .pipe(isProd() ? uglify() : gutil.noop())
     // optional, remove if you dont want sourcemaps
     .pipe(plugins.sourcemaps.init({loadMaps: !isProd()})) // loads map from browserify file
-       // Add transformation tasks to the pipeline here.
+    // Add transformation tasks to the pipeline here.
     .pipe(plugins.sourcemaps.write('./')) // writes .map file
     .pipe(gulp.dest(outputDir));
 }
@@ -115,11 +119,6 @@ gulp.task('js', () => {
         })
     );
 });
-
-// gulp.task('sw', () => {
-//    return gulp.src('src/js/sw.js')
-//     .pipe(gulp.dest('build/'));
-// });
 
 gulp.task('watch', () => {
     gulp.watch(['src/**/*.js'], ['js']);
