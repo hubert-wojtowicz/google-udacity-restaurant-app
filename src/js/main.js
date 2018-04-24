@@ -10,10 +10,16 @@ export default class MainPage {
     /**
      * Fetch neighborhoods and cuisines as soon as the page is loaded.
      */
-    // document.addEventListener('DOMContentLoaded', (event) => {
-    //   this.fetchNeighborhoods();
-    //   this.fetchCuisines();
-    // });
+    document.addEventListener('DOMContentLoaded', (event) => {
+      this.fetchNeighborhoods();
+      this.fetchCuisines();
+      
+      let nSel =  document.getElementById('neighborhoods-select');
+      let cSel =  document.getElementById('cuisines-select');
+      
+      nSel.addEventListener('change',() => this.updateRestaurants());
+      cSel.addEventListener('change',() => this.updateRestaurants());
+    });
         
     /**
      * Initialize Google map, called from HTML.
@@ -30,12 +36,6 @@ export default class MainPage {
       });
       this.updateRestaurants();
     }
-
-    let nSel =  document.getElementById('neighborhoods-select');
-    let cSel =  document.getElementById('cuisines-select');
-    
-    nSel.addEventListener('change',() => this.updateRestaurants());
-    cSel.addEventListener('change',() => this.updateRestaurants());
   }
   
   /**
@@ -55,7 +55,7 @@ export default class MainPage {
   /**
    * Set neighborhoods HTML.
    */
-  fillNeighborhoodsHTML(neighborhoods = self.neighborhoods) {
+  fillNeighborhoodsHTML(neighborhoods = this.neighborhoods) {
     const select = document.getElementById('neighborhoods-select');
     this.neighborhoods.forEach(neighborhood => {
       const option = document.createElement('option');
