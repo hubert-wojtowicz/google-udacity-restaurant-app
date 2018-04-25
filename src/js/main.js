@@ -1,12 +1,11 @@
-import DBHelper from './dbhelper';
-
 export default class MainPage {
-  constructor() {
+  constructor(db) {
     this.restaurants = null;
     this.neighborhoods = null;
     this.cuisines = null;
     this.map = null;
     this.markers = [];
+    this.db = db;
     /**
      * Fetch neighborhoods and cuisines as soon as the page is loaded.
      */
@@ -42,7 +41,7 @@ export default class MainPage {
    * Fetch all neighborhoods and set their HTML.
    */
   fetchNeighborhoods() {
-    DBHelper.fetchNeighborhoods((error, neighborhoods) => {
+    this.db.fetchNeighborhoods((error, neighborhoods) => {
       if (error) { // Got an error
         console.error(error);
       } else {
@@ -69,7 +68,7 @@ export default class MainPage {
    * Fetch all cuisines and set their HTML.
    */
   fetchCuisines() {
-    DBHelper.fetchCuisines((error, cuisines) => {
+    this.db.fetchCuisines((error, cuisines) => {
       if (error) { // Got an error!
         console.error(error);
       } else {
@@ -107,7 +106,7 @@ export default class MainPage {
     const cuisine = cSelect[cIndex].value;
     const neighborhood = nSelect[nIndex].value;
   
-    DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
+    this.db.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
       if (error) { // Got an error!
         console.error(error);
       } else {
@@ -153,11 +152,11 @@ export default class MainPage {
     image.className = 'restaurant-img';
     image.alt = restaurant.alt;
     if(restaurant.photograph){
-      image.src = DBHelper.imageUrlForRestaurant(restaurant,'-270min1x');
-      let srcset = `${DBHelper.imageUrlForRestaurant(restaurant,'-270min1x')} 1x, ${DBHelper.imageUrlForRestaurant(restaurant,'-540min2x')} 2x, ${DBHelper.imageUrlForRestaurant(restaurant,'-800')} 3x`;
+      image.src = this.db.imageUrlForRestaurant(restaurant,'-270min1x');
+      let srcset = `${this.db.imageUrlForRestaurant(restaurant,'-270min1x')} 1x, ${this.db.imageUrlForRestaurant(restaurant,'-540min2x')} 2x, ${this.db.imageUrlForRestaurant(restaurant,'-800')} 3x`;
       image.setAttribute('srcset',srcset);
     } else {
-      image.src = DBHelper.imageUrlForRestaurant();
+      image.src = this.db.imageUrlForRestaurant();
     }
     li.append(image);
   
@@ -175,7 +174,7 @@ export default class MainPage {
   
     const more = document.createElement('a');
     more.innerHTML = 'View Details';
-    more.href = DBHelper.urlForRestaurant(restaurant);
+    more.href = this.db.urlForRestaurant(restaurant);
     li.append(more)
   
     return li;
@@ -187,7 +186,7 @@ export default class MainPage {
   addMarkersToMap(restaurants = this.restaurants) {
     restaurants.forEach(restaurant => {
       // Add marker to the map
-      const marker = DBHelper.mapMarkerForRestaurant(restaurant, this.map);
+      const marker = this.db.mapMarkerForRestaurant(restaurant, this.map);
       google.maps.event.addListener(marker, 'click', () => {
         window.location.href = marker.url
       });

@@ -1,10 +1,10 @@
-import DBHelper from './dbhelper';
 import Helpers from './helpers';
 
 const MAX_RATING = 5;
 
 export default class RestaurantInfoPage {
-  constructor() {
+  constructor(db) {
+    this.db = db;
     this.restaurant = null;
     this.map = null;
     
@@ -22,7 +22,7 @@ export default class RestaurantInfoPage {
             scrollwheel: false
           });
           this.fillBreadcrumb();
-          DBHelper.mapMarkerForRestaurant(this.restaurant, this.map);
+          this.db.mapMarkerForRestaurant(this.restaurant, this.map);
         }
       });
     }
@@ -41,7 +41,7 @@ export default class RestaurantInfoPage {
       error = 'No restaurant id in URL'
       callback(error, null);
     } else {
-      DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+      this.db.fetchRestaurantById(id, (error, restaurant) => {
         this.restaurant = restaurant;
         if (!restaurant) {
           console.error(error);
@@ -67,13 +67,13 @@ export default class RestaurantInfoPage {
     image.className = 'restaurant-img'
     image.alt = restaurant.alt;
     if(restaurant.photograph){
-      image.src = DBHelper.imageUrlForRestaurant(restaurant, '-270min1x');
+      image.src = this.db.imageUrlForRestaurant(restaurant, '-270min1x');
       image.srcset = 
-        `${DBHelper.imageUrlForRestaurant(restaurant, '-800')} 800w, 
-        ${DBHelper.imageUrlForRestaurant(restaurant, '-540min2x')} 540w,
-        ${DBHelper.imageUrlForRestaurant(restaurant, '-270min1x')} 270w`;
+        `${this.db.imageUrlForRestaurant(restaurant, '-800')} 800w, 
+        ${this.db.imageUrlForRestaurant(restaurant, '-540min2x')} 540w,
+        ${this.db.imageUrlForRestaurant(restaurant, '-270min1x')} 270w`;
     } else {
-      image.src = DBHelper.imageUrlForRestaurant();
+      image.src = this.db.imageUrlForRestaurant();
     }
     const cuisine = document.getElementById('restaurant-cuisine');
     cuisine.innerHTML = restaurant.cuisine_type;
