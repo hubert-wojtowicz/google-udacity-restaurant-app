@@ -13,7 +13,9 @@ export default class DBHelper {
 
   openDatabase() {
     return idb.open('restaurant', 1, upgradeDB => {
-      upgradeDB.createObjectStore(RESTAURANTS_STORE, {keyPath: 'id'});
+      let restStore = upgradeDB.createObjectStore(RESTAURANTS_STORE, {keyPath: 'id'});
+      restStore.createIndex('cousine', 'cuisine_type');
+      restStore.createIndex('neighborhood', 'neighborhood');
     });
   }
 
@@ -23,27 +25,25 @@ export default class DBHelper {
         console.log(`Error while fetching restaurants ${error}`);
         return;
       }
-      for(let fetchedRestaurant of fetchedRestaurants) {
-        this.getRestaurantById(fetchedRestaurant.id, (restaurant)=>{
+      for(let fetchedRestaurant of fetchedRestaurants) {  
+        this.getRestaurantById(fetchedRestaurant.id)
+        .then((restaurant)=>{
           if(restaurant) return;
-
           this.addRestaurant(fetchedRestaurant);
+        }).catch((err)=>{
+          console.log(err);
         })
       } 
     });
   }
 
-  getRestaurantById(id, callback) {
-    this.dbPromise.then((db)=>{
+  getRestaurantById(id) {
+    return this.dbPromise.then((db)=>{
       const tx = db.transaction(RESTAURANTS_STORE);
       const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE);
-      const restaurant = restaurantObjStore.get(id)
-      .then((val)=>{
-        callback(val);
-      });
+      return restaurantObjStore.get(id);
     }).catch((err)=>{
-      console.log(err);
-      callback(null);
+      return Promise.reject(err);
     })
   }
 
@@ -57,15 +57,32 @@ export default class DBHelper {
   }
 
   getRestaurants() {
-
+    return this.dbPromise.then((db)=>{
+      const tx = db.transaction(RESTAURANTS_STORE);
+      const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE);
+      return restaurantObjStore.getAll();
+    }).catch((err)=>{
+      return Promise.reject(err);
+    })
   }
-  
-  getRestaurantsByCousine() {
-
+  _getRestaurantsByIndex(databaseIndexName, filterValue) {
+    return this.dbPromise.then((db)=>{
+      const tx = db.transaction(RESTAURANTS_STORE);
+      const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE);
+      const cousineIndex = restaurantObjStore.index(databaseIndexName);
+      return cousineIndex.getAll(filterValue);
+    })
+    .catch((err)=>{
+      return Promise.reject(err);
+    })
   }
 
-  getRestaurantsByNeighborhood() {
+  getRestaurantsByCousine(cousine) {
+    return this._getRestaurantsByIndex('cousine', cousine);
+  }
 
+  getRestaurantsByNeighborhood(neighborhood) {
+    return this._getRestaurantsByIndex('neighborhood', neighborhood);
   }
 
   /**
