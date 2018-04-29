@@ -1,6 +1,7 @@
 import idb from 'idb';
 
 var RESTAURANTS_STORE = 'restaurants';
+var RESTAURANTS_DATABASE = 'restaurant-db';
 
 /**
  * Common database helper functions.
@@ -8,11 +9,11 @@ var RESTAURANTS_STORE = 'restaurants';
 export default class DBHelper {
   constructor() {
     this.dbPromise = this.openDatabase();
-    this.updateDatabase();
+    if(this.dbPromise) this.updateDatabase();
   }
 
   openDatabase() {
-    return idb.open('restaurant', 1, upgradeDB => {
+    return idb.open(RESTAURANTS_DATABASE, 1, upgradeDB => {
       let restStore = upgradeDB.createObjectStore(RESTAURANTS_STORE, {keyPath: 'id'});  
       restStore.createIndex('cuisine', 'cuisine_type');
       restStore.createIndex('neighborhood', 'neighborhood');
@@ -23,12 +24,12 @@ export default class DBHelper {
   updateDatabase() {
     this.fetchRestaurants((error, fetchedRestaurants) => {
       if(error) {
-        console.log(`Error while fetching restaurants ${error}`);
-        return;
-      }
+       console.log(`Error while fetching restaurants: ${error}`);
+       return;
+      }  
+      
       for(let fetchedRestaurant of fetchedRestaurants) {  
-        this.getRestaurantById(fetchedRestaurant.id)
-        .then((restaurant)=>{
+        this.getRestaurantById(fetchedRestaurant.id).then((restaurant)=>{
           if(restaurant) return;
           this.addRestaurant(fetchedRestaurant);
         }).catch((err)=>{
@@ -49,11 +50,13 @@ export default class DBHelper {
   }
 
   addRestaurant(restaurant) {
-    return this.dbPromise.then((db)=>{
+    this.dbPromise.then((db)=>{
       const tx = db.transaction(RESTAURANTS_STORE,'readwrite');
       const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE); 
       restaurantObjStore.put(restaurant);
       return tx.complete;
+    }).catch((err)=>{
+      console.log(`Error while adding restaurant ${restaurant} to idb: ${err}`);
     });
   }
 
@@ -64,7 +67,7 @@ export default class DBHelper {
       return restaurantObjStore.getAll();
     }).catch((err)=>{
       return Promise.reject(err);
-    })
+    });
   }
 
   _getRestaurantsByIndex(databaseIndexName, filterValue) {
@@ -76,7 +79,7 @@ export default class DBHelper {
     })
     .catch((err)=>{
       return Promise.reject(err);
-    })
+    });
   }
 
   getRestaurantsByCuisine(cuisine) {
@@ -93,11 +96,11 @@ export default class DBHelper {
 
   getCuisine() {
     return this._getRestaurantsByIndex('cuisine')
-      .then((val)=>{
-        const cuisineDuplicated = val.map(r => r.cuisine_type);
-        const cuisineUnique = Array.from(new Set(cuisineDuplicated));
-        return new Promise((resolve,reject) => resolve(cuisineUnique));
-      });
+    .then((val)=>{
+      const cuisineDuplicated = val.map(r => r.cuisine_type);
+      const cuisineUnique = Array.from(new Set(cuisineDuplicated));
+      return new Promise((resolve,reject) => resolve(cuisineUnique));
+    });
   }
 
   getNeighborhood() {
