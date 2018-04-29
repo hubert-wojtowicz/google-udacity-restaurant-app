@@ -13,9 +13,10 @@ export default class DBHelper {
 
   openDatabase() {
     return idb.open('restaurant', 1, upgradeDB => {
-      let restStore = upgradeDB.createObjectStore(RESTAURANTS_STORE, {keyPath: 'id'});
-      restStore.createIndex('cousine', 'cuisine_type');
+      let restStore = upgradeDB.createObjectStore(RESTAURANTS_STORE, {keyPath: 'id'});  
+      restStore.createIndex('cuisine', 'cuisine_type');
       restStore.createIndex('neighborhood', 'neighborhood');
+      restStore.createIndex('cuisineNneighborhood', ['cuisine_type', 'neighborhood']);
     });
   }
 
@@ -70,37 +71,40 @@ export default class DBHelper {
     return this.dbPromise.then((db)=>{
       const tx = db.transaction(RESTAURANTS_STORE);
       const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE);
-      const cousineIndex = restaurantObjStore.index(databaseIndexName);
-      return cousineIndex.getAll(filterValue);
+      const cuisineIndex = restaurantObjStore.index(databaseIndexName);
+      return cuisineIndex.getAll(filterValue);
     })
     .catch((err)=>{
       return Promise.reject(err);
     })
   }
 
-  getRestaurantsByCousine(cousine) {
-    return this._getRestaurantsByIndex('cousine', cousine);
+  getRestaurantsByCuisine(cuisine) {
+    return this._getRestaurantsByIndex('cuisine', cuisine);
   }
 
   getRestaurantsByNeighborhood(neighborhood) {
     return this._getRestaurantsByIndex('neighborhood', neighborhood);
   }
 
-  getRestaurantByCuisineAndNeighborhood(cousine, neighborhood) {
-    var filteredRestaurants = new Array();
+  getRestaurantByCuisineAndNeighborhood(cuisine, neighborhood) {
+    return this._getRestaurantsByIndex('cuisineNneighborhood', [cuisine, neighborhood]);
+  } 
+
+  getCuisine() {
     return this.dbPromise.then((db)=>{
       const tx = db.transaction(RESTAURANTS_STORE);
       const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE);
-      return restaurantObjStore.openCursor();
-    }).then(function checkRest(cursor){
-      if (!cursor) return new Promise((resolve, reject) => resolve(filteredRestaurants));
-      
-      if(cursor.value.cuisine_type == cousine && cursor.value.neighborhood == neighborhood) {
-        filteredRestaurants.push(cursor.value);
-      }
-      return cursor.continue().then(checkRest);
+      const cuisineIndex = restaurantObjStore.index('cuisine');
+      debugger;
+      var x= restaurantObjStore.getAllKeys('cuisine_type').then(x=>console.log(x));
+      console.log(x);
     });
-  } 
+  }
+
+  getNeighborhood() {
+    
+  }
 
   /**
    * Database URL.
