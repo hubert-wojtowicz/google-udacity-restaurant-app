@@ -92,18 +92,21 @@ export default class DBHelper {
   } 
 
   getCuisine() {
-    return this.dbPromise.then((db)=>{
-      const tx = db.transaction(RESTAURANTS_STORE);
-      const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE);
-      const cuisineIndex = restaurantObjStore.index('cuisine');
-      debugger;
-      var x= restaurantObjStore.getAllKeys('cuisine_type').then(x=>console.log(x));
-      console.log(x);
-    });
+    return this._getRestaurantsByIndex('cuisine')
+      .then((val)=>{
+        const cuisineDuplicated = val.map(r => r.cuisine_type);
+        const cuisineUnique = Array.from(new Set(cuisineDuplicated));
+        return new Promise((resolve,reject) => resolve(cuisineUnique));
+      });
   }
 
   getNeighborhood() {
-    
+    return this._getRestaurantsByIndex('neighborhood')
+    .then((val)=>{
+      const neighborhoodDuplicated = val.map(r => r.neighborhood);
+      const neighborhoodUnique = Array.from(new Set(neighborhoodDuplicated));
+      return new Promise((resolve,reject) => resolve(neighborhoodUnique));
+    });
   }
 
   /**
