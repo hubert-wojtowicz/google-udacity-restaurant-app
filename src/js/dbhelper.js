@@ -65,6 +65,7 @@ export default class DBHelper {
       return Promise.reject(err);
     })
   }
+
   _getRestaurantsByIndex(databaseIndexName, filterValue) {
     return this.dbPromise.then((db)=>{
       const tx = db.transaction(RESTAURANTS_STORE);
@@ -84,6 +85,22 @@ export default class DBHelper {
   getRestaurantsByNeighborhood(neighborhood) {
     return this._getRestaurantsByIndex('neighborhood', neighborhood);
   }
+
+  getRestaurantByCuisineAndNeighborhood(cousine, neighborhood) {
+    var filteredRestaurants = new Array();
+    return this.dbPromise.then((db)=>{
+      const tx = db.transaction(RESTAURANTS_STORE);
+      const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE);
+      return restaurantObjStore.openCursor();
+    }).then(function checkRest(cursor){
+      if (!cursor) return new Promise((resolve, reject) => resolve(filteredRestaurants));
+      
+      if(cursor.value.cuisine_type == cousine && cursor.value.neighborhood == neighborhood) {
+        filteredRestaurants.push(cursor.value);
+      }
+      return cursor.continue().then(checkRest);
+    });
+  } 
 
   /**
    * Database URL.
