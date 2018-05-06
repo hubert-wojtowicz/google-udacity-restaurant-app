@@ -17,7 +17,7 @@ export default class DBHelper {
       let restStore = upgradeDB.createObjectStore(RESTAURANTS_STORE, {keyPath: 'id'});  
       restStore.createIndex('cuisine', 'cuisine_type');
       restStore.createIndex('neighborhood', 'neighborhood');
-      restStore.createIndex('cuisineNneighborhood', ['cuisine_type', 'neighborhood']);
+      restStore.createIndex('cuisineNeighborhood', ['cuisine_type', 'neighborhood']);
     });
   }
 
@@ -91,7 +91,23 @@ export default class DBHelper {
   }
 
   getRestaurantByCuisineAndNeighborhood(cuisine, neighborhood) {
-    return this._getRestaurantsByIndex('cuisineNneighborhood', [cuisine, neighborhood]);
+    const all = "all";
+    if(cuisine !== all) {
+      if(neighborhood !== all) {
+        return this._getRestaurantsByIndex('cuisineNeighborhood', [cuisine, neighborhood]);
+      } else {
+        // cuisine !== all AND neighborhood === all
+        return this._getRestaurantsByIndex('cuisine', cuisine);
+      }
+    } else {
+      if(neighborhood !== all) {
+        // cuisine === all AND neighborhood !== all
+        return this._getRestaurantsByIndex('neighborhood', neighborhood);
+      } else {
+        // cuisine === all AND neighborhood === all
+        return this.getRestaurants();
+      }
+    }
   } 
 
   getCuisines() {

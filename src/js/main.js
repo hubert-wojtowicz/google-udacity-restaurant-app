@@ -101,21 +101,13 @@ export default class MainPage {
   
     const cuisine = cSelect[cIndex].value;
     const neighborhood = nSelect[nIndex].value;
-  
-    this.db.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
-      if (error) { // Got an error!
-        console.error(error);
-      } else {
-        this.resetRestaurants(restaurants);
-        this.fillRestaurantsHTML();
-      }
-    })
-
-    // this.db.getRestaurantByCuisineAndNeighborhood(cuisine, neighborhood).then((restaurants)=>{
-
-    // }).catch((error)=>{
-    //   console.error(error);
-    // });
+    
+    this.db.getRestaurantByCuisineAndNeighborhood(cuisine, neighborhood).then((restaurants)=>{
+      this.resetRestaurants(restaurants);
+      this.fillRestaurantsHTML();
+    }).catch((error)=>{
+      console.error(error);
+    });
   }
   
   /**
