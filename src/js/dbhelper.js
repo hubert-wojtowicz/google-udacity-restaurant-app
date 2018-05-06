@@ -9,7 +9,10 @@ var RESTAURANTS_DATABASE = 'restaurant-db';
 export default class DBHelper {
   constructor() {
     this.dbPromise = this.openDatabase();
-    if(this.dbPromise) this.updateDatabase();
+    var dbhelper = this;
+    this.dbPromise.then((db)=>{
+      dbhelper.updateDatabase();
+    });
   }
 
   openDatabase() {
@@ -22,20 +25,28 @@ export default class DBHelper {
   }
 
   updateDatabase() {
-    this.fetchRestaurants((error, fetchedRestaurants) => {
-      if(error) {
-       console.log(`Error while fetching restaurants: ${error}`);
-       return;
-      }  
-      
-      for(let fetchedRestaurant of fetchedRestaurants) {  
-        this.getRestaurantById(fetchedRestaurant.id).then((restaurant)=>{
-          if(restaurant) return;
-          this.addRestaurant(fetchedRestaurant);
-        }).catch((err)=>{
-          console.log(err);
-        })
-      } 
+    // todo: updating db maybe by index 'updatedAt'
+    // for now if id=10 is in idb then no fetch from server
+    this.getRestaurantById(10).then((val)=>{
+
+      if(!val) {
+        this.fetchRestaurants((error, fetchedRestaurants) => {
+          if(error) {
+          console.log(`Error while fetching restaurants: ${error}`);
+          return;
+          }  
+
+          for(let fetchedRestaurant of fetchedRestaurants) {  
+            this.getRestaurantById(fetchedRestaurant.id).then((restaurant)=>{
+              if(restaurant) return;
+              this.addRestaurant(fetchedRestaurant);
+            }).catch((err)=>{
+              console.log(err);
+            })
+          } 
+        });
+      }
+
     });
   }
 
