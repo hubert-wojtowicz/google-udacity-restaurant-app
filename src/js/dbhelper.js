@@ -94,7 +94,7 @@ export default class DBHelper {
     return this._getRestaurantsByIndex('cuisineNneighborhood', [cuisine, neighborhood]);
   } 
 
-  getCuisine() {
+  getCuisines() {
     return this._getRestaurantsByIndex('cuisine')
     .then((val)=>{
       const cuisineDuplicated = val.map(r => r.cuisine_type);
@@ -103,7 +103,7 @@ export default class DBHelper {
     });
   }
 
-  getNeighborhood() {
+  getNeighborhoods() {
     return this._getRestaurantsByIndex('neighborhood')
     .then((val)=>{
       const neighborhoodDuplicated = val.map(r => r.neighborhood);

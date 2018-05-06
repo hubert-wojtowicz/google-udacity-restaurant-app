@@ -10,8 +10,8 @@ export default class MainPage {
      * Fetch neighborhoods and cuisines as soon as the page is loaded.
      */
     document.addEventListener('DOMContentLoaded', (event) => {
-      this.fetchNeighborhoods();
-      this.fetchCuisines();
+      this.getNeighborhoods();
+      this.getCuisines();
       
       let nSel =  document.getElementById('neighborhoods-select');
       let cSel =  document.getElementById('cuisines-select');
@@ -38,16 +38,14 @@ export default class MainPage {
   }
   
   /**
-   * Fetch all neighborhoods and set their HTML.
+   * Get all neighborhoods and set their HTML.
    */
-  fetchNeighborhoods() {
-    this.db.fetchNeighborhoods((error, neighborhoods) => {
-      if (error) { // Got an error
-        console.error(error);
-      } else {
-        this.neighborhoods = neighborhoods;
-        this.fillNeighborhoodsHTML();
-      }
+  getNeighborhoods() {
+    this.db.getNeighborhoods().then((neighborhoods)=>{
+      this.neighborhoods = neighborhoods;
+      this.fillNeighborhoodsHTML();
+    }).catch((error)=>{
+      console.error(error);
     });
   }
   
@@ -65,16 +63,14 @@ export default class MainPage {
   }
   
   /**
-   * Fetch all cuisines and set their HTML.
+   * Get all cuisines and set their HTML.
    */
-  fetchCuisines() {
-    this.db.fetchCuisines((error, cuisines) => {
-      if (error) { // Got an error!
-        console.error(error);
-      } else {
-        this.cuisines = cuisines;
-        this.fillCuisinesHTML();
-      }
+  getCuisines() {
+    this.db.getCuisines().then((cuisines)=>{
+      this.cuisines = cuisines;
+      this.fillCuisinesHTML();
+    }).catch((error)=>{
+      console.error(error);
     });
   }
   
@@ -114,6 +110,12 @@ export default class MainPage {
         this.fillRestaurantsHTML();
       }
     })
+
+    // this.db.getRestaurantByCuisineAndNeighborhood(cuisine, neighborhood).then((restaurants)=>{
+
+    // }).catch((error)=>{
+    //   console.error(error);
+    // });
   }
   
   /**
