@@ -12,18 +12,16 @@ export default class RestaurantInfoPage {
      * Initialize Google map, called from HTML.
      */
     window.initMap = () => {
-      this.fetchRestaurantFromURL((error, restaurant) => {
-        if (error) { // Got an error!
-          console.error(error);
-        } else {
-          this.map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 16,
-            center: restaurant.latlng,
-            scrollwheel: false
-          });
-          this.fillBreadcrumb();
-          this.db.mapMarkerForRestaurant(this.restaurant, this.map);
-        }
+      this.getRestaurantFromURL().then((restaurant)=>{
+        this.map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 16,
+          center: restaurant.latlng,
+          scrollwheel: false
+        });
+        this.fillBreadcrumb();
+        this.db.mapMarkerForRestaurant(this.restaurant, this.map);
+      }).catch((err)=>{
+        console.log(err);
       });
     }
   }
@@ -31,24 +29,24 @@ export default class RestaurantInfoPage {
   /**
    * Get current restaurant from page URL.
    */
-  fetchRestaurantFromURL(callback) {
+  getRestaurantFromURL() {
+    var restaurantInfoPage = this;
+
     if (this.restaurant) { // restaurant already fetched!
-      callback(null, this.restaurant)
-      return;
+      return Promise.resolve(this.restaurant);
     }
+    // todo: scope of id varieble
     const id = Helpers.getParameterByName('id');
     if (!id) { // no id found in URL
-      error = 'No restaurant id in URL'
-      callback(error, null);
+      return Promise.reject('No restaurant id in URL');
     } else {
-      this.db.fetchRestaurantById(id, (error, restaurant) => {
-        this.restaurant = restaurant;
-        if (!restaurant) {
-          console.error(error);
-          return;
-        }
-        this.fillRestaurantHTML();
-        callback(null, restaurant)
+      return this.db.getRestaurantById(id).then((restaurant)=>{
+        restaurantInfoPage.restaurant = restaurant;
+        restaurantInfoPage.fillRestaurantHTML(restaurant);
+        return Promise.resolve(restaurant);
+      }).catch((err)=>{
+        console.error(err);        
+        return Promise.reject(err);
       });
     }
   }
