@@ -13,6 +13,6 @@ export default class Helpers {
       return null;
     if (!results[2])
       return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    return Number(decodeURIComponent(results[2].replace(/\+/g, ' ')));
   }
 }
