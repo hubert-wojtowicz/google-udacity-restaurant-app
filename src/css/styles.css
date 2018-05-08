@@ -124,9 +124,9 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   align-items: center;
 }
 .filter-options h2 {
-  color: white;
+  color: black;
   font-size: 1rem;
-  font-weight: normal;
+  font-weight: bold;
   line-height: 1;
   margin: 0 20px;
 }
