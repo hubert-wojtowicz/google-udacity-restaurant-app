@@ -16,6 +16,7 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
+var sass = require('gulp-sass');
 
 var isPr = null;
 const isProduction = () => {
@@ -34,8 +35,13 @@ gulp.task('copy-html', () => {
     .pipe(gulp.dest(`build/`));
 });
 
-gulp.task('copy-css',() => {
-    return gulp.src(['src/css/**/*.css'])
+gulp.task('styles',() => {
+    const sassArgs =  isProduction() ? {outputStyle: 'compressed'} : undefined;
+    
+    return gulp.src('src/sass/**/*.scss')
+    .pipe(!isProduction() ? plugins.sourcemaps.init({loadMaps: true}) : gutil.noop())
+    .pipe(sass(sassArgs).on('error', sass.logError))
+    .pipe(!isProduction() ? plugins.sourcemaps.write() : gutil.noop())
     .pipe(gulp.dest(`build/css/`));
 })
 
@@ -138,5 +144,5 @@ gulp.task('default', (done) => {
     if(!isProduction())
         log.info(`In order to deploy to prod attach '--prod' param to build command.`);
 
-    runSequence('clean', ['copy-html', 'copy-css', 'copy-svg', 'copy-resized-imgs', 'js'], 'watch', done);
+    runSequence('clean', ['copy-html', 'styles', 'copy-svg', 'copy-resized-imgs', 'js'], 'watch', done);
 });
