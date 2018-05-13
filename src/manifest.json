@@ -22,7 +22,7 @@
       "type": "image/png"
     }, {
       "src": "ico/high-res.svg",
-      "sizes": "72x72 96x96 128x128 144x144 256x256",
+      "sizes": "72x72 96x96 128x128 144x144 256x256 512x512",
       "type": "image/svg"
     }]
   }
