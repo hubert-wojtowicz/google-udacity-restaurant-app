@@ -1,6 +1,6 @@
 {
-    "name": "MWS-Restaurants",
-    "short_name": "Restaurants",
+    "name": "Restaurants Reviews",
+    "short_name": "Reviews",
     "icons": [
         {
             "src": "/ico/android-chrome-36x36.png",
@@ -50,8 +50,9 @@
     ],
     "theme_color": "#000000",
     "background_color": "#000000",
-    "start_url": ".",
+    "start_url": "/",
     "display": "standalone",
     "description": "The app helps you to find, read and post reviews regaing restaurants.",
-    "lang" : "en-US"
+    "lang": "en-US",
+    "orientation": "any"
 }
