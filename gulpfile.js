@@ -81,7 +81,7 @@ gulp.task('copy-resized-imgs', (done) => {
         .pipe(parallel(
             imageResize({ 
                 width: imgDesc.size,
-                quality: 0.5
+                quality: 0.2
             }),
             os.cpus().length
         ))
