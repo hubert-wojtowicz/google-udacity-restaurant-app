@@ -19,7 +19,7 @@ ul, li {
 	color: #333;
 }
 a {
-	color: orange;
+	color: #f18200;
 	text-decoration: none;
 }
 a img{
@@ -64,8 +64,8 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 #head-nav h1 a:focus {
   background-color: black;
-  box-shadow: 0 0 6pt 4pt orange;
-  color: orange;
+  box-shadow: 0 0 6pt 4pt #f18200;
+  color: #f18200;
 }
 #breadcrumb {
   padding: 10px 40px 16px;
@@ -121,7 +121,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
   width: 100%;
-  background-color: orange;
+  background-color: #f18200;
   align-items: center;
 }
 .filter-options h2 {
@@ -188,7 +188,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   font-size: 11pt;
 }
 #restaurants-list li a {
-  background-color: orange;
+  background-color: #f18200;
   color: #fff;
   display: inline-block;
   font-size: 10pt;
@@ -200,8 +200,8 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 #restaurants-list li a:focus, #footer a:focus {
   background-color: black;
-  box-shadow: 0 0 6pt 4pt orange;
-  color: orange;
+  box-shadow: 0 0 6pt 4pt #f18200;
+  color: #f18200;
 }
 #cuisines-select:focus, #neighborhoods-select:focus {
   box-shadow: 0 0 3pt 2pt black;
