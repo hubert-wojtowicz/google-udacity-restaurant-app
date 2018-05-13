@@ -1,0 +1,28 @@
+{
+    "name": "MWS-RestauraApp",
+    "short_name": "Restaurants",
+    "start_url": ".",
+    "theme_color": "#000000",
+    "display": "standalone",
+    "background_color": "#f3f3f3",
+    "description": "The app helps you to find, read and post reviews regaing restaurants.",
+    "lang" : "en-US",
+    "orientation" : "any",
+    "icons": [{
+      "src": "ico/32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }, {
+      "src": "ico/48x48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    }, {
+      "src": "ico/64x64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    }, {
+      "src": "ico/high-res.svg",
+      "sizes": "72x72 96x96 128x128 144x144 256x256",
+      "type": "image/svg"
+    }]
+  }
