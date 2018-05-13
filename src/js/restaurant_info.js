@@ -63,7 +63,7 @@ export default class RestaurantInfoPage {
     
     const image = document.getElementById('restaurant-img');
     image.className = 'restaurant-img'
-    image.alt = restaurant.alt;
+    image.alt = `Picture representing the ${restaurant.name}`;
     if(restaurant.photograph){
       image.src = this.db.imageUrlForRestaurant(restaurant, '-270min1x');
       image.srcset = 
