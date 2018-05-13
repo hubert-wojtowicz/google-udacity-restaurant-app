@@ -51,7 +51,7 @@ gulp.task('copy-svg', () => {
 });
 
 gulp.task('copy-configuration', () => {
-    return gulp.src(['./src/site.webmanifest', './src/browserconfig.xml'])
+    return gulp.src(['./src/site.webmanifest', './src/browserconfig.xml', './src/web.config'])
     .pipe(gulp.dest(`build/`));
 });
 
