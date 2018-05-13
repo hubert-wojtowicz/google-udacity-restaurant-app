@@ -50,8 +50,8 @@ gulp.task('copy-svg', () => {
     .pipe(gulp.dest(`build/img`));
 });
 
-gulp.task('copy-json', () => {
-    return gulp.src(['./src/manifest.json'])
+gulp.task('copy-configuration', () => {
+    return gulp.src(['./src/site.webmanifest', './src/browserconfig.xml'])
     .pipe(gulp.dest(`build/`));
 });
 
@@ -144,7 +144,7 @@ gulp.task('js', () => {
 gulp.task('watch', () => {
     gulp.watch(['src/**/*.js'], ['js']);
     gulp.watch(['src/**/*.html'], ['copy-html']);
-    gulp.watch(['src/**/*.json'], ['copy-json']);
+    gulp.watch(['src/**/*.json'], ['copy-configuration']);
 
     Object.keys(jsBundles).forEach((key) => {
         var b = jsBundles[key];
@@ -158,5 +158,5 @@ gulp.task('default', (done) => {
     if(!isProduction())
         log.info(`In order to deploy to prod attach '--prod' param to build command.`);
 
-    runSequence('clean', ['copy-json', 'copy-ico', 'copy-html', 'styles', 'copy-svg', 'copy-resized-imgs', 'js'], 'watch', done);
+    runSequence('clean', ['copy-configuration', 'copy-ico', 'copy-html', 'styles', 'copy-svg', 'copy-resized-imgs', 'js'], 'watch', done);
 });
