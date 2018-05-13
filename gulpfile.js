@@ -79,7 +79,10 @@ gulp.task('copy-resized-imgs', (done) => {
     imgDescs.forEach((imgDesc) => {
         gulp.src("src/img/*.{jpg,png}")
         .pipe(parallel(
-            imageResize({ width : imgDesc.size }),
+            imageResize({ 
+                width: imgDesc.size,
+                quality: 0.5
+            }),
             os.cpus().length
         ))
         .pipe(rename(function (path) { path.basename += imgDesc.suffix; }))
