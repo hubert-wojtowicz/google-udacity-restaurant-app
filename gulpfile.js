@@ -145,6 +145,7 @@ gulp.task('watch', () => {
     gulp.watch(['src/**/*.js'], ['js']);
     gulp.watch(['src/**/*.html'], ['copy-html']);
     gulp.watch(['src/**/*.json'], ['copy-configuration']);
+    gulp.watch(['src/**/*.scss'], ['styles']);
 
     Object.keys(jsBundles).forEach((key) => {
         var b = jsBundles[key];
