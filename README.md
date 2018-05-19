@@ -5,11 +5,11 @@
 ## Project installation:
 
 For installation of this project following steps are required:
-1. Install GraphicMagic (GM) on your machine. You can download it here: `http://www.graphicsmagick.org/`.
-2. Make sure you open new instance of terminal after GM installation.
-3. Run command `npm install -g grunt-cli`.
-4. Install all project dependencies with - run cmd in terminal `npm install`.
-5. Run application in HTTP server.
+1. Download server code from repository [mws-restaurant-stage-2](https://github.com/hubert-wojtowicz/mws-restaurant-stage-2).
+2. Go to server root directory and run cmds `npm install`, then  `node server` in terminal.
+3. Download code from this repository.
+4. Install all project dependencies - run `npm install` cmd in terminal.
+5. Build and run application by comand `gulp --prod` or `gulp --dev`, depending on code version you need. Cmd `gulp --prod` will build optimized version.
 
 ## Project Overview: Stage 1
 
