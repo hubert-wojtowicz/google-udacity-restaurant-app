@@ -10,6 +10,7 @@ For installation of this project following steps are required:
 3. Download code from this repository.
 4. Install all project dependencies - run `npm install` cmd in terminal.
 5. Build and run application by comand `gulp --prod` or `gulp --dev`, depending on code version you need. Cmd `gulp --prod` will build optimized version.
+6. In ./build path there are ready files to place on the server.
 
 ## Project Overview: Stage 1
 
