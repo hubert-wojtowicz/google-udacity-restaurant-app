@@ -6,3 +6,5 @@ img-resized/
 
 # those files will not be tracked as long as they can be generated with build process
 build/
+
+package-lock.json
