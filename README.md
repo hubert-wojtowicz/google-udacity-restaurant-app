@@ -10,8 +10,9 @@ For installation of this project following steps are required:
 3. Download code from this repository.
 4. Install all project dependencies - run `npm install` cmd in terminal.
 5. Install `GraphicsMagick` version at least `1.3.28`. This program is required by `gulp-image-resize` package.
-6. Build and run application by comand `gulp --prod` or `gulp --dev`, depending on code version you need. Cmd `gulp --prod` will build optimized version.
-7. In ./build path there are ready files to place on the server.
+6. Update google API key in `src/index.html` file.
+7. Build and run application by comand `gulp --prod` or `gulp --dev`, depending on code version you need. Cmd `gulp --prod` will build optimized version.
+8. In ./build path there are ready files to place on the server.
 
 ## Project Overview: Stage 1
 
