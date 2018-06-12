@@ -24,19 +24,32 @@ export default class MainPage {
      * Initialize Google map, called from HTML.
      */
     window.initMap = () => {
-      let loc = {
-        lat: 40.722216,
-        lng: -73.987501
-      };
-      this.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        center: loc,
-        scrollwheel: false
-      });
-      this.updateRestaurants();
+      // let loc = {
+      //   lat: 40.722216,
+      //   lng: -73.987501
+      // };
+      // this.map = new google.maps.Map(document.getElementById('map'), {
+      //   zoom: 12,
+      //   center: loc,
+      //   scrollwheel: false
+      // });
     }
+    this.updateRestaurants();
+
+    document.getElementById("show-map").addEventListener('click', this.expandMap.bind(this));
   }
   
+  expandMap(eventArgs) {
+    let clickedButton = eventArgs.currentTarget;
+    this.changeMapIcon(clickedButton);
+  }
+
+  changeMapIcon(buttonParent) {
+    var containFar = buttonParent.children[0].classList.contains("far");
+    buttonParent.children[0].classList.toggle("far",!containFar);
+    buttonParent.children[0].classList.toggle("fas",containFar);
+  }
+
   /**
    * Get all neighborhoods and set their HTML.
    */
@@ -133,7 +146,7 @@ export default class MainPage {
     restaurants.forEach(restaurant => {
       ul.append(this.createRestaurantHTML(restaurant));
     });
-    this.addMarkersToMap();
+    //this.addMarkersToMap();
   }
   
   /**
