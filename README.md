@@ -5,7 +5,7 @@
 ## Project installation:
 
 For installation of this project following steps are required:
-1. Download server code from repository [mws-restaurant-stage-2](https://github.com/hubert-wojtowicz/mws-restaurant-stage-2).
+1. Download back-end server code from repository [mws-restaurant-stage-3](https://github.com/udacity/mws-restaurant-stage-3).
 2. Go to server root directory and run cmds `npm install`, then  `node server` in terminal.
 3. Download code from this repository.
 4. Install all project dependencies - run `npm install` cmd in terminal.
