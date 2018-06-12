@@ -9,8 +9,9 @@ For installation of this project following steps are required:
 2. Go to server root directory and run cmds `npm install`, then  `node server` in terminal.
 3. Download code from this repository.
 4. Install all project dependencies - run `npm install` cmd in terminal.
-5. Build and run application by comand `gulp --prod` or `gulp --dev`, depending on code version you need. Cmd `gulp --prod` will build optimized version.
-6. In ./build path there are ready files to place on the server.
+5. Install `GraphicsMagick` version at least `1.3.28`. This program is required by `gulp-image-resize` package.
+6. Build and run application by comand `gulp --prod` or `gulp --dev`, depending on code version you need. Cmd `gulp --prod` will build optimized version.
+7. In ./build path there are ready files to place on the server.
 
 ## Project Overview: Stage 1
 
