@@ -18,6 +18,7 @@ var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var replace = require('gulp-token-replace');
+var requireNew = require('require-new');
 
 var isPr = null;
 const isProduction = () => {
@@ -115,23 +116,26 @@ var jsBundles = {
 };
 
 const bundle = (b, outputPath) => {
-  var splitPath = outputPath.split('/');
-  var outputFile = splitPath[splitPath.length - 1];
-  var outputDir = splitPath.slice(0, -1).join('/');
+    var splitPath = outputPath.split('/');
+    var outputFile = splitPath[splitPath.length - 1];
+    var outputDir = splitPath.slice(0, -1).join('/');
+    var config = requireNew('./config.js');
+    log('Google maps API key: '+ config.GOOGLE_MAPS.API_KEY + ' was placed in '+ outputPath);
 
-  return b.bundle()
-    // log errors if they happen
-    .on('error', log.bind(plugins.util, 'Browserify Error'))
-    .pipe(source(outputFile))
-    // optional, remove if you don't need to buffer file contents
-    .pipe(buffer())
-    // uglify js files
-    .pipe(isProduction() ? uglify() : gutil.noop())
-    // optional, remove if you dont want sourcemaps
-    .pipe(!isProduction() ? plugins.sourcemaps.init({loadMaps: true}) : gutil.noop()) // loads map from browserify file
-    // Add transformation tasks to the pipeline here.
-    .pipe(!isProduction() ? plugins.sourcemaps.write('./') : gutil.noop()) // writes .map file
-    .pipe(gulp.dest(outputDir));
+    return b.bundle()
+        // log errors if they happen
+        .on('error', log.bind(plugins.util, 'Browserify Error'))
+        .pipe(source(outputFile))
+        // optional, remove if you don't need to buffer file contents
+        .pipe(buffer())
+        .pipe(replace({global: config}))
+        // uglify js files
+        .pipe(isProduction() ? uglify() : gutil.noop())
+        // optional, remove if you dont want sourcemaps
+        .pipe(!isProduction() ? plugins.sourcemaps.init({loadMaps: true}) : gutil.noop()) // loads map from browserify file
+        // Add transformation tasks to the pipeline here.
+        .pipe(!isProduction() ? plugins.sourcemaps.write('./') : gutil.noop()) // writes .map file
+        .pipe(gulp.dest(outputDir));
 }
 
 gulp.task('js', () => {
@@ -142,23 +146,11 @@ gulp.task('js', () => {
     );
 });
 
-/*
-    Get token from config.js and replace tokens at build destination.  
-*/
-gulp.task('token-replace', function(){
-    var config = require('./config.js');
-    log(config);
-    return gulp.src(['build/*.js', 'build/*.html'])
-      .pipe(replace({global:config}))
-      .pipe(gulp.dest('build/'));
-  });
-
 gulp.task('watch', () => {
-    gulp.watch(['src/**/*.js'], ['js']);
+    gulp.watch(['src/**/*.js','config.js'], ['js']);
     gulp.watch(['src/**/*.html'], ['copy-html']);
     gulp.watch(['src/**/*.json'], ['copy-configuration']);
     gulp.watch(['src/**/*.scss'], ['styles']);
-    gulp.watch(['config.js'], ['gulp-token-replace']);
 
     Object.keys(jsBundles).forEach((key) => {
         var b = jsBundles[key];
@@ -172,5 +164,5 @@ gulp.task('default', (done) => {
     if(!isProduction())
         log.info(`In order to deploy to prod attach '--prod' param to build command.`);
 
-    runSequence('clean', ['copy-configuration', 'copy-ico', 'copy-html', 'styles', 'copy-svg', 'copy-resized-imgs', 'js'], ['token-replace'], 'watch', done);
+    runSequence('clean', ['copy-configuration', 'copy-ico', 'copy-html', 'styles', 'copy-svg', 'copy-resized-imgs', 'js'], 'watch', done);
 });
