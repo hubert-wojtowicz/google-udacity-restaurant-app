@@ -76,6 +76,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   width: calc(50% - 80px);
 }
 #show-map {
+  outline:0;
   position: absolute;
   top: 60px;
   left: 5px;
