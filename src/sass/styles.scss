@@ -75,21 +75,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   margin: 0;
   width: calc(50% - 80px);
 }
-#show-map {
-  outline:0;
-  position: absolute;
-  top: 60px;
-  left: 5px;
-  font-size: 1em;
-  color: grey;
-  background:none!important;
-  border:none; 
-  padding:0!important;
-  font: inherit;
-  /*border is optional*/
-  border-bottom:1px solid #444; 
-  cursor: pointer;
-}
+
 /* Display list items side by side */
 #breadcrumb li {
   display: inline;
@@ -122,10 +108,31 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 /* ====================== Map ====================== */
 #map {
-  height: 400px;
   width: 100%;
   background-color: #ccc;
 }
+#map.expanded {
+  height: 400px;
+}
+#map.collapsed {
+  height: 0;
+}
+#show-map {
+  outline:0;
+  position: absolute;
+  top: 60px;
+  left: 5px;
+  font-size: 1em;
+  color: grey;
+  background:none!important;
+  border:none; 
+  padding:0!important;
+  font: inherit;
+  /*border is optional*/
+  border-bottom:1px solid #444; 
+  cursor: pointer;
+}
+
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
   width: 100%;

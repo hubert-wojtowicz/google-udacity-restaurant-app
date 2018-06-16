@@ -1,3 +1,38 @@
+class MapManager {
+  constructor() {
+    this.expanded = false;
+    this.loaded = false;
+    this.mapContainer = document.getElementById("map");
+    this.mapButton = document.getElementById("show-map");
+
+    this.mapButton.addEventListener('click', this.expandOrCollapseMap.bind(this));
+  }
+
+  expandOrCollapseMap(eventArgs) {
+    let clickedButton = eventArgs.currentTarget;
+    this.changeMapIcon(clickedButton);
+    this.changeMapHeight();
+
+    this.expanded = !this.expanded;
+  }
+
+  changeMapIcon(buttonParent) {
+    buttonParent.children[0].classList.toggle("far", this.expanded);
+    buttonParent.children[0].classList.toggle("fas", !this.expanded);
+  }
+
+  changeMapHeight() {
+    if(this.expanded) {
+      this.mapContainer.classList.add("collapsed");
+      this.mapContainer.classList.remove("expanded");
+    } else {
+      this.mapContainer.classList.add("expanded");
+      this.mapContainer.classList.remove("collapsed");
+    }
+  }
+}
+
+
 export default class MainPage {
   constructor(db) {
     this.restaurants = null;
@@ -19,35 +54,23 @@ export default class MainPage {
       nSel.addEventListener('change',() => this.updateRestaurants());
       cSel.addEventListener('change',() => this.updateRestaurants());
     });
-        
+    var mapManager = new MapManager(document);
+    
     /**
      * Initialize Google map, called from HTML.
      */
     window.initMap = () => {
-      // let loc = {
-      //   lat: 40.722216,
-      //   lng: -73.987501
-      // };
-      // this.map = new google.maps.Map(document.getElementById('map'), {
-      //   zoom: 12,
-      //   center: loc,
-      //   scrollwheel: false
-      // });
+      let loc = {
+        lat: 40.722216,
+        lng: -73.987501
+      };
+      this.map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: loc,
+        scrollwheel: false
+      });
     }
-    this.updateRestaurants();
-
-    document.getElementById("show-map").addEventListener('click', this.expandMap.bind(this));
-  }
-  
-  expandMap(eventArgs) {
-    let clickedButton = eventArgs.currentTarget;
-    this.changeMapIcon(clickedButton);
-  }
-
-  changeMapIcon(buttonParent) {
-    var containFar = buttonParent.children[0].classList.contains("far");
-    buttonParent.children[0].classList.toggle("far",!containFar);
-    buttonParent.children[0].classList.toggle("fas",containFar);
+    //this.updateRestaurants();
   }
 
   /**
