@@ -17,6 +17,7 @@ var buffer = require('vinyl-buffer');
 var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
+var replace = require('gulp-token-replace');
 
 var isPr = null;
 const isProduction = () => {
@@ -141,11 +142,23 @@ gulp.task('js', () => {
     );
 });
 
+/*
+    Get token from config.js and replace tokens at build destination.  
+*/
+gulp.task('token-replace', function(){
+    var config = require('./config.js');
+    log(config);
+    return gulp.src(['build/*.js', 'build/*.html'])
+      .pipe(replace({global:config}))
+      .pipe(gulp.dest('build/'));
+  });
+
 gulp.task('watch', () => {
     gulp.watch(['src/**/*.js'], ['js']);
     gulp.watch(['src/**/*.html'], ['copy-html']);
     gulp.watch(['src/**/*.json'], ['copy-configuration']);
     gulp.watch(['src/**/*.scss'], ['styles']);
+    gulp.watch(['config.js'], ['gulp-token-replace']);
 
     Object.keys(jsBundles).forEach((key) => {
         var b = jsBundles[key];
@@ -159,5 +172,5 @@ gulp.task('default', (done) => {
     if(!isProduction())
         log.info(`In order to deploy to prod attach '--prod' param to build command.`);
 
-    runSequence('clean', ['copy-configuration', 'copy-ico', 'copy-html', 'styles', 'copy-svg', 'copy-resized-imgs', 'js'], 'watch', done);
+    runSequence('clean', ['copy-configuration', 'copy-ico', 'copy-html', 'styles', 'copy-svg', 'copy-resized-imgs', 'js'], ['token-replace'], 'watch', done);
 });

@@ -8,3 +8,6 @@ img-resized/
 build/
 
 package-lock.json
+
+# file where tokens and api key are stored
+config.js
