@@ -1,37 +1,4 @@
-class MapManager {
-  constructor() {
-    this.expanded = false;
-    this.loaded = false;
-    this.mapContainer = document.getElementById("map");
-    this.mapButton = document.getElementById("show-map");
-
-    this.mapButton.addEventListener('click', this.expandOrCollapseMap.bind(this));
-  }
-
-  expandOrCollapseMap(eventArgs) {
-    let clickedButton = eventArgs.currentTarget;
-    this.changeMapIcon(clickedButton);
-    this.changeMapHeight();
-
-    this.expanded = !this.expanded;
-  }
-
-  changeMapIcon(buttonParent) {
-    buttonParent.children[0].classList.toggle("far", this.expanded);
-    buttonParent.children[0].classList.toggle("fas", !this.expanded);
-  }
-
-  changeMapHeight() {
-    if(this.expanded) {
-      this.mapContainer.classList.add("collapsed");
-      this.mapContainer.classList.remove("expanded");
-    } else {
-      this.mapContainer.classList.add("expanded");
-      this.mapContainer.classList.remove("collapsed");
-    }
-  }
-}
-
+import MapManager from './mapManager';
 
 export default class MainPage {
   constructor(db) {
@@ -54,22 +21,7 @@ export default class MainPage {
       nSel.addEventListener('change',() => this.updateRestaurants());
       cSel.addEventListener('change',() => this.updateRestaurants());
     });
-    var mapManager = new MapManager(document);
-    
-    /**
-     * Initialize Google map, called from HTML.
-     */
-    window.initMap = () => {
-      let loc = {
-        lat: 40.722216,
-        lng: -73.987501
-      };
-      this.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        center: loc,
-        scrollwheel: false
-      });
-    }
+    var mapManager = new MapManager(this.restaurants);
     //this.updateRestaurants();
   }
 
@@ -208,19 +160,5 @@ export default class MainPage {
     li.append(more)
   
     return li;
-  }
-  
-  /**
-   * Add markers for current restaurants to the map.
-   */
-  addMarkersToMap(restaurants = this.restaurants) {
-    restaurants.forEach(restaurant => {
-      // Add marker to the map
-      const marker = this.db.mapMarkerForRestaurant(restaurant, this.map);
-      google.maps.event.addListener(marker, 'click', () => {
-        window.location.href = marker.url
-      });
-      this.markers.push(marker);
-    });
   }
 }
