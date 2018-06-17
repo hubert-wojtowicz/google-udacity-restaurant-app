@@ -142,11 +142,11 @@ export default class MainPage {
     image.className = 'restaurant-img';
     image.alt = `Picture representing the ${restaurant.name}`;
     if(restaurant.photograph){
-      image.src = this.db.imageUrlForRestaurant(restaurant,'-270min1x');
-      let srcset = `${this.db.imageUrlForRestaurant(restaurant,'-270min1x')} 1x, ${this.db.imageUrlForRestaurant(restaurant,'-540min2x')} 2x, ${this.db.imageUrlForRestaurant(restaurant,'-800')} 3x`;
+      image.src = CommonHelper.imageUrlForRestaurant(restaurant,'-270min1x');
+      let srcset = `${CommonHelper.imageUrlForRestaurant(restaurant,'-270min1x')} 1x, ${CommonHelper.imageUrlForRestaurant(restaurant,'-540min2x')} 2x, ${CommonHelper.imageUrlForRestaurant(restaurant,'-800')} 3x`;
       image.setAttribute('srcset',srcset);
     } else {
-      image.src = this.db.imageUrlForRestaurant();
+      image.src = CommonHelper.imageUrlForRestaurant();
     }
     li.append(image);
   

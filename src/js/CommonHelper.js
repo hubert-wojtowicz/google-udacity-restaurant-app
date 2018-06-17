@@ -19,4 +19,13 @@ export default class CommonHelper {
   static urlForRestaurant(restaurant) {
     return (`./restaurant.html?id=${restaurant.id}`);
   }
+
+  static imageUrlForRestaurant(restaurant = null, resizeVersion = null) {
+    if(!restaurant || !restaurant.photograph)
+      return `/img/noImage.svg`;
+
+    return resizeVersion ? 
+    `/img/${restaurant.photograph}${resizeVersion}.jpg` :
+    `/img/${restaurant.photograph}.jpg` ;
+  }
 }

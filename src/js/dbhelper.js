@@ -164,17 +164,4 @@ export default class DBHelper {
       callback(err, null)
     })
   }
-
-  /**
-   * Restaurant image URL.
-   */
-  imageUrlForRestaurant(restaurant = null, resizeVersion = null) {
-    if(!restaurant || !restaurant.photograph)
-      return `/img/noImage.svg`;
-
-    return resizeVersion ? 
-    `/img/${restaurant.photograph}${resizeVersion}.jpg` :
-    `/img/${restaurant.photograph}.jpg` ;
-  }
-
 }

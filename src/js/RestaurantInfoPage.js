@@ -65,13 +65,13 @@ export default class RestaurantInfoPage {
     image.className = 'restaurant-img';
     image.alt = `Picture representing the ${restaurant.name}`;
     if(restaurant.photograph){
-      image.src = this.db.imageUrlForRestaurant(restaurant, '-270min1x');
+      image.src = CommonHelper.imageUrlForRestaurant(restaurant, '-270min1x');
       image.srcset = 
-        `${this.db.imageUrlForRestaurant(restaurant, '-800')} 800w, 
-        ${this.db.imageUrlForRestaurant(restaurant, '-540min2x')} 540w,
-        ${this.db.imageUrlForRestaurant(restaurant, '-270min1x')} 270w`;
+        `${CommonHelper.imageUrlForRestaurant(restaurant, '-800')} 800w, 
+        ${CommonHelper.imageUrlForRestaurant(restaurant, '-540min2x')} 540w,
+        ${CommonHelper.imageUrlForRestaurant(restaurant, '-270min1x')} 270w`;
     } else {
-      image.src = this.db.imageUrlForRestaurant();
+      image.src = CommonHelper.imageUrlForRestaurant();
     }
     const cuisine = document.getElementById('restaurant-cuisine');
     cuisine.innerHTML = restaurant.cuisine_type;
