@@ -1,22 +1,26 @@
 import loadGoogleMapsApi from 'load-google-maps-api'; 
+import CommonHelper from './CommonHelper';
 
 export default class MapManager {
-  constructor(restaurants) {
-    this.expanded = false;
-    this.googleMap = null;
-    this.mapContainer = document.getElementById("map");
-    this.mapButton = document.getElementById("show-map");
+    constructor(restaurants) {
+        this.restaurants = restaurants;
+        this.expanded = false;
+        this.map = null;
+        this.mapAPI = null;
+        this.markers = [];
+        this.mapContainer = document.getElementById("map");
+        this.mapButton = document.getElementById("show-map");
 
-    this.mapButton.addEventListener('click', this.expandOrCollapseMap.bind(this));
-  }
+        this.mapButton.addEventListener('click', this.expandOrCollapseMap.bind(this));
+    }
 
     expandOrCollapseMap(eventArgs) {
-        var evArgs = eventArgs;
         loadGoogleMapsApi({
             key: '{{GOOGLE_MAPS.API_KEY}}',
         }).then((googleMaps)=>{
-            if(!this.googleMap) {
-                this.googleMap = new googleMaps.Map(this.mapContainer, {
+            if(!this.map) {
+                this.mapAPI = googleMaps;
+                this.map = new googleMaps.Map(this.mapContainer, {
                     zoom: 12,
                     center: {
                         lat: 40.722216,
@@ -26,13 +30,15 @@ export default class MapManager {
                 });
             }
         }).then(()=>{
-            let clickedButton = evArgs.target;
-            this.changeMapIcon(clickedButton);
-            this.changeMapHeight();
+            // issue with accessing eventArgs.currentTarget below work around
+            this.changeMapIcon(this.mapButton);
+
+            this.addMarkers(this.restaurants);
+            this.changeHeight();
             this.expanded = !this.expanded;
         })
         .catch((err)=>{
-            this.googleMap = null;
+            this.map = null;
             console.log("Error while loading map: ", err);
         });
     }
@@ -42,28 +48,39 @@ export default class MapManager {
         buttonParent.children[0].classList.toggle("fas", !this.expanded);
     }
 
-    changeMapHeight() {
+    changeHeight() {
         if(this.expanded) {
-        this.mapContainer.classList.add("collapsed");
-        this.mapContainer.classList.remove("expanded");
+            this.mapContainer.classList.add("collapsed");
+            this.mapContainer.classList.remove("expanded");
         } else {
-        this.mapContainer.classList.add("expanded");
-        this.mapContainer.classList.remove("collapsed");
+            this.mapContainer.classList.add("expanded");
+            this.mapContainer.classList.remove("collapsed");
         }
     }
 
-  
-  /**
-   * Add markers for current restaurants to the map.
-   */
-//   addMarkersToMap(restaurants = this.restaurants) {
-//     restaurants.forEach(restaurant => {
-//       // Add marker to the map
-//       const marker = this.db.mapMarkerForRestaurant(restaurant, this.map);
-//       google.maps.event.addListener(marker, 'click', () => {
-//         window.location.href = marker.url
-//       });
-//       this.markers.push(marker);
-//     });
-//   }
+    addMarkers(restaurants) {
+        restaurants.forEach(restaurant => {
+            const marker = this.markerForRestaurantFactory(restaurant, this.map);
+            google.maps.event.addListener(marker, 'click', () => {
+                window.location.href = marker.url
+            });
+            this.markers.push(marker);
+        });
+    }
+
+    removeMarkers() {
+        this.markers.forEach(m => m.setMap(null));
+        this.markers = [];
+    }
+
+    markerForRestaurantFactory(restaurant) {
+        const marker = new this.mapAPI.Marker({
+            position: restaurant.latlng,
+            title: restaurant.name,
+            url: CommonHelper.urlForRestaurant(restaurant),
+            map: this.map,
+            animation: this.mapAPI.Animation.DROP}
+        );
+        return marker;
+    }
 }

@@ -1,7 +1,7 @@
-import MainPage from './main';
-import RestaurantInfoPage from './restaurant_info';
-import Helpers from './helpers';
-import DBHelper from './dbhelper';
+import MainPage from './MainPage';
+import RestaurantInfoPage from './RestaurantInfoPage';
+import CommonHelper from './CommonHelper';
+import DBHelper from './DBHelper';
 
 export default class IndexController {
     constructor() {
@@ -27,7 +27,7 @@ export default class IndexController {
     };
 
     routingControl() {
-        let restaurantId = Helpers.getParameterByName('id', window.location.href);
+        let restaurantId = CommonHelper.getParameterByName('id', window.location.href);
         if(restaurantId) {
             console.log('szczegóły restauracji o id = ' + restaurantId );
             this.page = new RestaurantInfoPage(this.db);

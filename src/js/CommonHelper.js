@@ -1,4 +1,4 @@
-export default class Helpers {
+export default class CommonHelper {
 
   /**
    * Get a parameter by name from page URL.
@@ -14,5 +14,9 @@ export default class Helpers {
     if (!results[2])
       return '';
     return Number(decodeURIComponent(results[2].replace(/\+/g, ' ')));
+  }
+
+  static urlForRestaurant(restaurant) {
+    return (`./restaurant.html?id=${restaurant.id}`);
   }
 }

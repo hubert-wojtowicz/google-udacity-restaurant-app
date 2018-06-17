@@ -1,4 +1,4 @@
-import Helpers from './helpers';
+import CommonHelper from './CommonHelper';
 
 const MAX_RATING = 5;
 
@@ -36,7 +36,7 @@ export default class RestaurantInfoPage {
       return Promise.resolve(this.restaurant);
     }
     // todo: scope of id varieble
-    const id = Helpers.getParameterByName('id');
+    const id = CommonHelper.getParameterByName('id');
     if (!id) { // no id found in URL
       return Promise.reject('No restaurant id in URL');
     } else {

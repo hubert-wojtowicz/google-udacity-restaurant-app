@@ -1,28 +1,37 @@
-import MapManager from './mapManager';
+import MapManager from './MapManager';
+import CommonHelper from './CommonHelper';
 
 export default class MainPage {
-  constructor(db) {
-    this.restaurants = null;
+  constructor(db) {   
+    this.db = db;
+    this.restaurants = [];
     this.neighborhoods = null;
     this.cuisines = null;
-    this.map = null;
-    this.markers = [];
-    this.db = db;
-    /**
-     * Fetch neighborhoods and cuisines as soon as the page is loaded.
-     */
-    document.addEventListener('DOMContentLoaded', (event) => {
-      this.getNeighborhoods();
-      this.getCuisines();
-      
-      let nSel =  document.getElementById('neighborhoods-select');
-      let cSel =  document.getElementById('cuisines-select');
-      
-      nSel.addEventListener('change',() => this.updateRestaurants());
-      cSel.addEventListener('change',() => this.updateRestaurants());
-    });
-    var mapManager = new MapManager(this.restaurants);
-    //this.updateRestaurants();
+    this.mapManager = null;
+    
+    this.db.getRestaurantByCuisineAndNeighborhood('all', 'all')
+    .then((restaurants)=>{
+      this.restaurants = restaurants;
+      this.mapManager = new MapManager(restaurants);
+    })
+
+    document.addEventListener('DOMContentLoaded', this.onDOMContentLoaded.bind(this));
+  }
+  
+  /**
+   * Get neighborhoods and cuisines as soon as the page is loaded.
+   */
+  onDOMContentLoaded(event) {
+    this.getNeighborhoods();
+    this.getCuisines();
+    
+    let nSel =  document.getElementById('neighborhoods-select');
+    let cSel =  document.getElementById('cuisines-select');
+    
+    nSel.addEventListener('change',() => this.updateRestaurants());
+    cSel.addEventListener('change',() => this.updateRestaurants());
+
+    this.updateRestaurants()
   }
 
   /**
@@ -90,9 +99,11 @@ export default class MainPage {
     const cuisine = cSelect[cIndex].value;
     const neighborhood = nSelect[nIndex].value;
     
-    this.db.getRestaurantByCuisineAndNeighborhood(cuisine, neighborhood).then((restaurants)=>{
+    this.db.getRestaurantByCuisineAndNeighborhood(cuisine, neighborhood)
+    .then((restaurants)=>{
+      this.restaurants = restaurants;
       this.resetRestaurants(restaurants);
-      this.fillRestaurantsHTML();
+      this.fillRestaurantsHTML(restaurants);
     }).catch((error)=>{
       console.error(error);
     });
@@ -106,17 +117,14 @@ export default class MainPage {
     this.restaurants = [];
     const ul = document.getElementById('restaurants-list');
     ul.innerHTML = '';
-  
-    // Remove all map markers
-    this.markers.forEach(m => m.setMap(null));
-    this.markers = [];
-    this.restaurants = restaurants;
+
+    //todo: remove markers
   }
   
   /**
    * Create all restaurants HTML and add them to the webpage.
    */
-  fillRestaurantsHTML(restaurants = this.restaurants) {
+  fillRestaurantsHTML(restaurants) {
     const ul = document.getElementById('restaurants-list');
     restaurants.forEach(restaurant => {
       ul.append(this.createRestaurantHTML(restaurant));
@@ -156,7 +164,7 @@ export default class MainPage {
   
     const more = document.createElement('a');
     more.innerHTML = 'View Details';
-    more.href = this.db.urlForRestaurant(restaurant);
+    more.href = CommonHelper.urlForRestaurant(restaurant);
     li.append(more)
   
     return li;
