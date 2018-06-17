@@ -28,12 +28,12 @@ export default class MapManager {
                     },
                     scrollwheel: false
                 });
+                this.addMarkers(this.restaurants);
             }
         }).then(()=>{
             // issue with accessing eventArgs.currentTarget below work around
             this.changeMapIcon(this.mapButton);
 
-            this.addMarkers(this.restaurants);
             this.changeHeight();
             this.expanded = !this.expanded;
         })
@@ -57,7 +57,7 @@ export default class MapManager {
             this.mapContainer.classList.remove("collapsed");
         }
     }
-
+    
     addMarkers(restaurants) {
         restaurants.forEach(restaurant => {
             const marker = this.markerForRestaurantFactory(restaurant, this.map);
