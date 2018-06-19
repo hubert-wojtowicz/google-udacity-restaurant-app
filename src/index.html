@@ -24,18 +24,17 @@
   <body>
     <header>
       <div id="head-nav" role="banner">
-        <h1><a href="/">Restaurant Reviews</a></h1>
-      
-        <button id="show-map">Show map <i class="far fa-map"></i></button>
+        <dic><h1><a href="/">Restaurant Reviews</a></h1></dic>
       </div>
     </header>
-
+    
     <main id="maincontent">
       <section id="map-container">
         <div id="map"role="application" aria-hidden="true"></div>
       </section>
       <section>
         <div class="filter-options" role="search" aria-label="Filter by neighborhoods and cuisines options">
+          <button id="map-icon" class="map-icon-main-page" aria-label="Show google maps"><i class="far fa-map"></i><br><strong>Show map</strong></button>
           <h2 id="filters">Filter Results</h2>
           <select id="neighborhoods-select" name="neighborhoods" aria-label="Filter by neighborhoods">
             <option value="all">All Neighborhoods</option>

@@ -3,6 +3,8 @@ import CommonHelper from './CommonHelper';
 import { ECANCELED } from 'constants';
 
 export default class MapManager {
+    get iconText() { return (this.expanded) ? "Show map" : "Hide map"; }
+
     constructor(restaurants) {
         this.restaurants = restaurants;
         this.expanded = false;
@@ -10,7 +12,7 @@ export default class MapManager {
         this.mapAPI = null;
         this.markers = [];
         this.mapContainer = document.getElementById("map");
-        this.mapButton = document.getElementById("show-map");
+        this.mapButton = document.getElementById("map-icon");
 
         this.mapButton.addEventListener('click', this.expandOrCollapseMap.bind(this));
     }
@@ -44,6 +46,7 @@ export default class MapManager {
     }
 
     changeMapIcon(buttonParent) {
+        this._changeIconText();
         buttonParent.children[0].classList.toggle("far", this.expanded);
         buttonParent.children[0].classList.toggle("fas", !this.expanded);
     }
@@ -56,6 +59,9 @@ export default class MapManager {
             this.mapContainer.classList.add("expanded");
             this.mapContainer.classList.remove("collapsed");
         }
+    }
+    _changeIconText() {
+        document.querySelector('strong', this.mapButton).innerHTML = this.iconText;
     }
     
     addMarkers(restaurants) {
