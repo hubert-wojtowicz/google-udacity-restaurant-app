@@ -29,10 +29,8 @@ export default class IndexController {
     routingControl() {
         let restaurantId = CommonHelper.getParameterByName('id', window.location.href);
         if(restaurantId) {
-            console.log('szczegóły restauracji o id = ' + restaurantId );
             this.page = new RestaurantInfoPage(this.db);
           } else {
-            console.log('Ogólny widok.');
             this.page = new MainPage(this.db);
         }
     }

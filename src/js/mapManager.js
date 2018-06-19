@@ -3,8 +3,6 @@ import CommonHelper from './CommonHelper';
 import { ECANCELED } from 'constants';
 
 export default class MapManager {
-    get iconText() { return (this.expanded) ? "Show map" : "Hide map"; }
-
     constructor(restaurants) {
         this.restaurants = restaurants;
         this.expanded = false;
@@ -13,11 +11,28 @@ export default class MapManager {
         this.markers = [];
         this.mapContainer = document.getElementById("map");
         this.mapButton = document.getElementById("map-icon");
-
-        this.mapButton.addEventListener('click', this.expandOrCollapseMap.bind(this));
+        
+        this.mapButton.addEventListener('click', this._expandOrCollapseMap.bind(this));
     }
 
-    expandOrCollapseMap(event) {
+    get iconText() { return (this.expanded) ? "Show map" : "Hide map"; }
+    
+    addMarkers(restaurants) {
+        restaurants.forEach(restaurant => {
+            const marker = this.markerForRestaurantFactory(restaurant, this.map);
+            google.maps.event.addListener(marker, 'click', () => {
+                window.location.href = marker.url
+            });
+            this.markers.push(marker);
+        });
+    }
+    
+    removeMarkers() {
+        this.markers.forEach(m => m.setMap(null));
+        this.markers = [];
+    }
+    
+    _expandOrCollapseMap(event) {
         let currentTarget = event.currentTarget;
         loadGoogleMapsApi({
             key: '{{GOOGLE_MAPS.API_KEY}}',
@@ -32,11 +47,11 @@ export default class MapManager {
                     },
                     scrollwheel: false
                 });
-                this.addMarkers(this.restaurants);
+                this._addMarkers(this.restaurants);
             }
         }).then(()=>{
-            this.changeMapIcon(currentTarget);
-            this.changeHeight();
+            this._changeMapIcon(currentTarget);
+            this._changeHeight();
             this.expanded = !this.expanded;
         })
         .catch((err)=>{
@@ -45,13 +60,13 @@ export default class MapManager {
         });
     }
 
-    changeMapIcon(buttonParent) {
+    _changeMapIcon(buttonParent) {
         this._changeIconText();
         buttonParent.children[0].classList.toggle("far", this.expanded);
         buttonParent.children[0].classList.toggle("fas", !this.expanded);
     }
 
-    changeHeight() {
+    _changeHeight() {
         if(this.expanded) {
             this.mapContainer.classList.add("collapsed");
             this.mapContainer.classList.remove("expanded");
@@ -63,23 +78,8 @@ export default class MapManager {
     _changeIconText() {
         document.querySelector('strong', this.mapButton).innerHTML = this.iconText;
     }
-    
-    addMarkers(restaurants) {
-        restaurants.forEach(restaurant => {
-            const marker = this.markerForRestaurantFactory(restaurant, this.map);
-            google.maps.event.addListener(marker, 'click', () => {
-                window.location.href = marker.url
-            });
-            this.markers.push(marker);
-        });
-    }
 
-    removeMarkers() {
-        this.markers.forEach(m => m.setMap(null));
-        this.markers = [];
-    }
-
-    markerForRestaurantFactory(restaurant) {
+    _markerForRestaurantFactory(restaurant) {
         const marker = new this.mapAPI.Marker({
             position: restaurant.latlng,
             title: restaurant.name,
