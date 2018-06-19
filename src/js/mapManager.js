@@ -1,5 +1,6 @@
 import loadGoogleMapsApi from 'load-google-maps-api'; 
 import CommonHelper from './CommonHelper';
+import { ECANCELED } from 'constants';
 
 export default class MapManager {
     constructor(restaurants) {
@@ -14,7 +15,8 @@ export default class MapManager {
         this.mapButton.addEventListener('click', this.expandOrCollapseMap.bind(this));
     }
 
-    expandOrCollapseMap(eventArgs) {
+    expandOrCollapseMap(event) {
+        let currentTarget = event.currentTarget;
         loadGoogleMapsApi({
             key: '{{GOOGLE_MAPS.API_KEY}}',
         }).then((googleMaps)=>{
@@ -31,9 +33,7 @@ export default class MapManager {
                 this.addMarkers(this.restaurants);
             }
         }).then(()=>{
-            // issue with accessing eventArgs.currentTarget below work around
-            this.changeMapIcon(this.mapButton);
-
+            this.changeMapIcon(currentTarget);
             this.changeHeight();
             this.expanded = !this.expanded;
         })
