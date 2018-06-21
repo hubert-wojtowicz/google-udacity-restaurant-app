@@ -27,12 +27,12 @@ export default class IndexController {
     };
 
     routingControl() {
-        let restaurantId = CommonHelper.getParameterByName('id', window.location.href);
-        if(restaurantId) {
-            this.page = new RestaurantInfoPage(this.db);
-          } else {
-            this.page = new MainPage(this.db);
-        }
+      let restaurantId = CommonHelper.getParameterByName('id');
+      if(restaurantId) {
+          this.page = new RestaurantInfoPage(this.db);
+        } else {
+          this.page = new MainPage(this.db);
+      }
     }
   }
   

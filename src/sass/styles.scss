@@ -141,6 +141,15 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   }
 }
 
+.map-icon-restaurant-page {
+  font-size: 0.5em;
+  float: right;
+  margin: 7px 7px;
+  i {
+    font-size: 2em;
+  }
+}
+
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
   width: 100%;

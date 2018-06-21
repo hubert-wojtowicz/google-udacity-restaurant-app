@@ -1,4 +1,5 @@
 import CommonHelper from './CommonHelper';
+import MapManager from './MapManager';
 
 const MAX_RATING = 5;
 
@@ -6,26 +7,23 @@ export default class RestaurantInfoPage {
   constructor(db) {
     this.db = db;
     this.restaurant = null;
-    this.map = null;
+    this.mapManager = null;
     
-    /**
-     * Initialize Google map, called from HTML.
-     */
-    window.initMap = () => {
-      this.getRestaurantFromURL().then((restaurant)=>{
-        this.map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 16,
-          center: restaurant.latlng,
-          scrollwheel: false
-        });
-        this.fillBreadcrumb();
-        this.db.mapMarkerForRestaurant(this.restaurant, this.map);
-      }).catch((err)=>{
-        console.log(err);
-      });
-    }
+    document.addEventListener('DOMContentLoaded', this.onDOMContentLoaded.bind(this));
   }
   
+  onDOMContentLoaded(event) {
+    let restaurantId = CommonHelper.getParameterByName('id');
+    this.db.getRestaurantById(restaurantId)
+    .then((restaurant)=>{
+      this.restaurant = restaurant;
+      this.mapManager = new MapManager([restaurant]);
+      this.fillBreadcrumb();
+    }).catch((err)=>{
+      console.log(err);
+    });
+  }
+
   /**
    * Get current restaurant from page URL.
    */

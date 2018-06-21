@@ -18,9 +18,10 @@ export default class MapManager {
     get iconText() { return (this.expanded) ? "Show map" : "Hide map"; }
     
     addMarkers(restaurants) {
+
         restaurants.forEach(restaurant => {
-            const marker = this.markerForRestaurantFactory(restaurant, this.map);
-            google.maps.event.addListener(marker, 'click', () => {
+            const marker = this._markerForRestaurantFactory(restaurant);
+            this.mapAPI.event.addListener(marker, 'click', () => {
                 window.location.href = marker.url
             });
             this.markers.push(marker);
@@ -47,11 +48,11 @@ export default class MapManager {
                     },
                     scrollwheel: false
                 });
-                this._addMarkers(this.restaurants);
+                this.addMarkers(this.restaurants);
             }
         }).then(()=>{
             this._changeMapIcon(currentTarget);
-            this._changeHeight();
+            this._changeVisibility();
             this.expanded = !this.expanded;
         })
         .catch((err)=>{
@@ -66,7 +67,7 @@ export default class MapManager {
         buttonParent.children[0].classList.toggle("fas", !this.expanded);
     }
 
-    _changeHeight() {
+    _changeVisibility() {
         if(this.expanded) {
             this.mapContainer.classList.add("collapsed");
             this.mapContainer.classList.remove("expanded");

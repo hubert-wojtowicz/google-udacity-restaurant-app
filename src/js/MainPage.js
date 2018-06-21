@@ -9,12 +9,6 @@ export default class MainPage {
     this.cuisines = null;
     this.mapManager = null;
     
-    this.db.getRestaurantByCuisineAndNeighborhood('all', 'all')
-    .then((restaurants)=>{
-      this.restaurants = restaurants;
-      this.mapManager = new MapManager(restaurants);
-    })
-
     document.addEventListener('DOMContentLoaded', this.onDOMContentLoaded.bind(this));
   }
   
@@ -22,6 +16,14 @@ export default class MainPage {
    * Get neighborhoods and cuisines as soon as the page is loaded.
    */
   onDOMContentLoaded(event) {
+    this.db.getRestaurantByCuisineAndNeighborhood('all', 'all')
+    .then((restaurants)=>{
+      this.restaurants = restaurants;
+      this.mapManager = new MapManager(restaurants);
+    }).catch((err)=>{
+      console.log(err);
+    });
+
     this.getNeighborhoods();
     this.getCuisines();
     
@@ -85,7 +87,6 @@ export default class MainPage {
     });
   }
 
-  
   /**
    * Update page and map for current restaurants.
    */
@@ -118,7 +119,7 @@ export default class MainPage {
     const ul = document.getElementById('restaurants-list');
     ul.innerHTML = '';
 
-    //todo: remove markers
+    this.mapManager.removeMarkers();
   }
   
   /**
@@ -129,7 +130,8 @@ export default class MainPage {
     restaurants.forEach(restaurant => {
       ul.append(this.createRestaurantHTML(restaurant));
     });
-    //this.addMarkersToMap();
+    
+    //this.mapManager.addMarkers(restaurants);
   }
   
   /**
