@@ -13,13 +13,13 @@ export default class RestaurantInfoPage {
   }
   
   onDOMContentLoaded(event) {
-    let restaurantId = CommonHelper.getParameterByName('id');
-    this.db.getRestaurantById(restaurantId)
-    .then((restaurant)=>{
-      this.restaurant = restaurant;
+    this.getRestaurantFromURL()
+    .then(restaurant => {
       this.mapManager = new MapManager([restaurant]);
       this.fillBreadcrumb();
-    }).catch((err)=>{
+      this.fillRestaurantHTML(restaurant);
+    })
+    .catch(err => {
       console.log(err);
     });
   }
@@ -28,22 +28,17 @@ export default class RestaurantInfoPage {
    * Get current restaurant from page URL.
    */
   getRestaurantFromURL() {
-    var restaurantInfoPage = this;
-
-    if (this.restaurant) { // restaurant already fetched!
+    if (this.restaurant) {
       return Promise.resolve(this.restaurant);
     }
-    // todo: scope of id varieble
     const id = CommonHelper.getParameterByName('id');
-    if (!id) { // no id found in URL
+    if (!id) {
       return Promise.reject('No restaurant id in URL');
     } else {
       return this.db.getRestaurantById(id).then((restaurant)=>{
-        restaurantInfoPage.restaurant = restaurant;
-        restaurantInfoPage.fillRestaurantHTML(restaurant);
+        this.restaurant = restaurant;
         return Promise.resolve(restaurant);
-      }).catch((err)=>{
-        console.error(err);        
+      }).catch((err)=>{       
         return Promise.reject(err);
       });
     }
