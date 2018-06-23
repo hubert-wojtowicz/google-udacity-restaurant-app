@@ -1,0 +1,51 @@
+  #map.expanded {
+    height: 400px;
+  }
+  
+  #map.collapsed {
+    height: 0;
+  }
+
+  .inside {
+    #map.expanded {
+        height: 400px;
+      }
+      
+      #map.collapsed {
+        height: 0;
+      }
+  }
+  
+  #map {
+    width: 100%;
+    background-color: #ccc;
+  }
+  
+  #map-icon {
+    border:none; 
+    font: inherit;
+    cursor: pointer;
+    outline:0;
+    color: black;
+    background:none!important;
+    padding:0!important;
+  }
+  
+  .map-icon-main-page {
+    font-size: 1em;
+    float: right;
+    margin: 7px 7px;
+    i {
+      font-size: 4em;
+    }
+  }
+  
+  .map-icon-restaurant-page {
+    font-size: 0.5em;
+    float: right;
+    margin: 7px 7px;
+    i {
+      font-size: 2em;
+    }
+  }
+  
