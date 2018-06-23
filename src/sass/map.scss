@@ -1,23 +1,37 @@
+@import 'variebles';
+.main {
+  #map {
+    width: 100%;
+  }
   #map.expanded {
-    height: 400px;
+    height: $mainPageMapHeight;
   }
   
   #map.collapsed {
     height: 0;
   }
-
+  .map-icon-main-page {
+    font-size: 1em;
+    float: right;
+    margin: 7px 7px;
+    i {
+      font-size: 4em;
+    }
+  }
+}
+  
   .inside {
-    #map.expanded {
-        height: 400px;
+    .map-icon {
+      font-size: 0.5em;
+      float: right;
+      margin: 7px 7px;
+      i {
+        font-size: 2em;
       }
-      
-      #map.collapsed {
-        height: 0;
-      }
+    }
   }
   
   #map {
-    width: 100%;
     background-color: #ccc;
   }
   
@@ -30,22 +44,3 @@
     background:none!important;
     padding:0!important;
   }
-  
-  .map-icon-main-page {
-    font-size: 1em;
-    float: right;
-    margin: 7px 7px;
-    i {
-      font-size: 4em;
-    }
-  }
-  
-  .map-icon-restaurant-page {
-    font-size: 0.5em;
-    float: right;
-    margin: 7px 7px;
-    i {
-      font-size: 2em;
-    }
-  }
-  
