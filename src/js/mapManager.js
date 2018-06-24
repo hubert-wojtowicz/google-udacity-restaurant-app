@@ -3,16 +3,23 @@ import CommonHelper from './CommonHelper';
 import { ECANCELED } from 'constants';
 
 export default class MapManager {
-    constructor(restaurants) {
+    constructor(restaurants, loadImidaiately=false) {
         this.restaurants = restaurants;
         this.expanded = false;
         this.map = null;
         this.mapAPI = null;
         this.markers = [];
-        this.mapContainer = document.getElementById("map");
+        this.mapInjectionDiv = document.getElementById("map"); 
+        this.mapContainer = document.getElementById("map-container");
         this.mapButton = document.getElementById("map-icon");
-        
-        this.mapButton.addEventListener('click', this._expandOrCollapseMap.bind(this));
+        this.loadImidaiately = loadImidaiately;
+
+        if(loadImidaiately) {
+            this._expandOrCollapseMap();
+        }
+        else {
+            this.mapButton.addEventListener('click', this._expandOrCollapseMap.bind(this));
+        }
     }
 
     get iconText() { return (this.expanded) ? "Show map" : "Hide map"; }
@@ -33,14 +40,17 @@ export default class MapManager {
         this.markers = [];
     }
     
-    _expandOrCollapseMap(event) {
-        let currentTarget = event.currentTarget;
+    _expandOrCollapseMap(event = null) {
+        let currentTarget = null;
+        if(!this.loadImidaiately)
+             currentTarget = event.currentTarget;
+
         loadGoogleMapsApi({
             key: '{{GOOGLE_MAPS.API_KEY}}',
         }).then((googleMaps)=>{
             if(!this.map) {
                 this.mapAPI = googleMaps;
-                this.map = new googleMaps.Map(this.mapContainer, {
+                this.map = new googleMaps.Map(this.mapInjectionDiv, {
                     zoom: 12,
                     center: {
                         lat: 40.722216,
@@ -51,9 +61,11 @@ export default class MapManager {
                 this.addMarkers(this.restaurants);
             }
         }).then(()=>{
-            this._changeMapIcon(currentTarget);
-            this._changeVisibility();
-            this.expanded = !this.expanded;
+            if(!this.loadImidaiately){
+                this._changeMapIcon(currentTarget);
+                this._changeVisibility();
+                this.expanded = !this.expanded;
+            }
         })
         .catch((err)=>{
             this.map = null;

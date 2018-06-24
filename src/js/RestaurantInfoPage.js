@@ -15,7 +15,7 @@ export default class RestaurantInfoPage {
   onDOMContentLoaded(event) {
     this.getRestaurantFromURL()
     .then(restaurant => {
-      this.mapManager = new MapManager([restaurant]);
+      this.mapManager = new MapManager([restaurant], true);
       this.fillBreadcrumb();
       this.fillRestaurantHTML(restaurant);
     })
