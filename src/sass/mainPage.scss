@@ -61,6 +61,10 @@
     object-fit: cover;
   }
   #restaurants-list li h2 {
+    white-space: nowrap; 
+    width: 270px; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
     color: #f18200;
     font-family: Arial,sans-serif;
     font-size: 14pt;

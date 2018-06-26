@@ -51,6 +51,11 @@ export default class DBHelper {
     });
   }
 
+  updateRestaurantById(id, changedPropsOfRestaurant) {
+    //todo
+    console.log(`There will be restaurang of if=${id} updated with:`, changedPropsOfRestaurant);
+  }
+
   getRestaurantById(id) {
     return this.dbPromise.then((db)=>{
       const tx = db.transaction(RESTAURANTS_STORE);

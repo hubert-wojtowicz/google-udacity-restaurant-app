@@ -1,5 +1,6 @@
 import CommonHelper from './CommonHelper';
 import MapManager from './MapManager';
+import Favourite from './Favourite';
 
 const MAX_RATING = 5;
 
@@ -8,6 +9,7 @@ export default class RestaurantInfoPage {
     this.db = db;
     this.restaurant = null;
     this.mapManager = null;
+    this.favouriteManager = null;
     
     document.addEventListener('DOMContentLoaded', this.onDOMContentLoaded.bind(this));
   }
@@ -16,6 +18,10 @@ export default class RestaurantInfoPage {
     this.getRestaurantFromURL()
     .then(restaurant => {
       this.mapManager = new MapManager([restaurant], true);
+
+      const favouriteRestaurantContainer = document.getElementById('restaurant-is-favourite');
+      this.favouriteManager = new Favourite(restaurant, favouriteRestaurantContainer, this.db);
+
       this.fillBreadcrumb();
       this.fillRestaurantHTML(restaurant);
     })

@@ -151,11 +151,12 @@ export default class MainPage {
       image.src = CommonHelper.imageUrlForRestaurant();
     }
     li.append(image);
-  
+
     const name = document.createElement('h2');
-    name.innerHTML = restaurant.name;
+    const fullStar = restaurant.is_favorite;
+    name.innerHTML = `${fullStar ? '★ ': '☆ '}${restaurant.name}`;
     li.append(name);
-  
+
     const neighborhood = document.createElement('p');
     neighborhood.innerHTML = restaurant.neighborhood;
     li.append(neighborhood);
@@ -168,7 +169,7 @@ export default class MainPage {
     more.innerHTML = 'View Details';
     more.href = CommonHelper.urlForRestaurant(restaurant);
     li.append(more)
-  
+
     return li;
   }
 }

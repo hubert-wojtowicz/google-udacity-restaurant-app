@@ -31,25 +31,25 @@ h1, h2, h3, h4, h5, h6 {
 article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, #head-nav, section {
 	display: block;
 }
-#maincontent {
-	background-color: #f3f3f3;
-	min-height: 100%;
-  }
+	#maincontent {
+		background-color: #f3f3f3;
+		min-height: 100%;
+	}
   #footer {
-	background-color: black;
-	color: #aaa;
-	font-size: 8pt;
-	letter-spacing: 1px;
-	padding: 25px;
-	text-align: center;
-	text-transform: uppercase;
+		background-color: black;
+		color: #aaa;
+		font-size: 8pt;
+		letter-spacing: 1px;
+		padding: 25px;
+		text-align: center;
+		text-transform: uppercase;
   }
   /* ====================== Navigation ====================== */
-#head-nav {
-	width: 100%;
-	height: $headerHeight;
-	background-color: black;
-	text-align: center;
+	#head-nav {
+		width: 100%;
+		height: $headerHeight;
+		background-color: black;
+		text-align: center;
   }
   #head-nav h1 {
 	margin: auto;
@@ -66,12 +66,3 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 	box-shadow: 0 0 6pt 4pt #f18200;
 	color: #f18200;
   }
-  #breadcrumb {
-	padding: 10px 40px 16px;
-	list-style: none;
-	background-color: #eee;
-	font-size: 17px;
-	margin: 0;
-	width: calc(50% - 80px);
-  }
-  
