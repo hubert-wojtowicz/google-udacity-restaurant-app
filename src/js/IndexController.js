@@ -1,7 +1,7 @@
-import MainPage from './MainPage';
-import RestaurantInfoPage from './RestaurantInfoPage';
-import CommonHelper from './CommonHelper';
-import DBHelper from './DBHelper';
+import MainPage from './mainPage';
+import RestaurantInfoPage from './restaurantInfoPage';
+import CommonHelper from './commonHelper';
+import DBHelper from './dbHelper';
 
 export default class IndexController {
     constructor() {

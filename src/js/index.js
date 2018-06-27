@@ -1,3 +1,3 @@
-import IndexController from './IndexController';
+import IndexController from './indexController';
 
 var index = new IndexController();

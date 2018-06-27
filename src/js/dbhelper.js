@@ -1,5 +1,5 @@
 import idb from 'idb';
-import CommonHelper from './CommonHelper';
+import CommonHelper from './commonHelper';
 
 var RESTAURANTS_STORE = 'restaurants';
 var RESTAURANTS_DATABASE = 'restaurant-db';

@@ -1,6 +1,4 @@
-
-
-export default class Favourite {
+export default class FavouriteManager {
     get isFavorite() {
         return this.restaurant.is_favorite;
     }

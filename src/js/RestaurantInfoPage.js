@@ -1,6 +1,6 @@
-import CommonHelper from './CommonHelper';
-import MapManager from './MapManager';
-import Favourite from './Favourite';
+import CommonHelper from './commonHelper';
+import MapManager from './mapManager';
+import Favourite from './favouriteManager';
 
 const MAX_RATING = 5;
 
