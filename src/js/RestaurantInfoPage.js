@@ -1,6 +1,7 @@
 import CommonHelper from './commonHelper';
 import MapManager from './mapManager';
 import Favourite from './favouriteManager';
+import CommentFormManager from './commentFormManager';
 
 const MAX_RATING = 5;
 
@@ -10,6 +11,7 @@ export default class RestaurantInfoPage {
     this.restaurant = null;
     this.mapManager = null;
     this.favouriteManager = null;
+    this.reviewForm = null;
     
     document.addEventListener('DOMContentLoaded', this.onDOMContentLoaded.bind(this));
   }
@@ -21,6 +23,9 @@ export default class RestaurantInfoPage {
 
       const favouriteRestaurantContainer = document.getElementById('restaurant-is-favourite');
       this.favouriteManager = new Favourite(restaurant, favouriteRestaurantContainer, this.db);
+
+      const reviewFormContainer = document.getElementById('review-form');
+      this.reviewForm = new CommentFormManager(restaurant, reviewFormContainer, this.db);
 
       this.fillBreadcrumb();
       this.fillRestaurantHTML(restaurant);
@@ -107,7 +112,7 @@ export default class RestaurantInfoPage {
    * Create all reviews HTML and add them to the webpage.
    */
   fillReviewsHTML(reviews = this.restaurant.reviews) {
-    const container = document.getElementById('reviews-container');
+    const container = document.getElementById('review-list-container');
     const title = document.createElement('h3');
     title.innerHTML = 'Reviews';
     container.appendChild(title);

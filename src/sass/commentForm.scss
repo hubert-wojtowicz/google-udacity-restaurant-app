@@ -1,0 +1,25 @@
+#review-form {
+    display: grid;
+
+    .review-form-input-text {
+        margin: 10px;        
+    }
+
+    textarea {
+        margin: 10px;
+        resize: none;
+        height: 1.2em;
+    }
+
+    textarea:focus {
+        height: 10em;
+    }
+
+    .review-form-submit {
+        margin: 10px;
+        line-height: 2;
+    }
+    .review-form-submit::after {
+        content:'Submit review'; 
+    }
+}
