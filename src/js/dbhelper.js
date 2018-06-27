@@ -61,14 +61,21 @@ export default class DBHelper {
   }
 
   updateRestaurantById(id, changedPropsOfRestaurant) {
-    console.log(`There will be restaurang of if=${id} updated with:`, changedPropsOfRestaurant);
-    // this.dbPromise.then(db => {
-    //   const tx = db.transaction(RESTAURANTS_STORE,'readwrite');
-    //   const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE); 
-    //   restaurantObjStore.c
-    // }).catch((err)=>{
-    //   return Promise.reject(err);
-    // })
+    this.dbPromise.then(db => {
+      const tx = db.transaction(RESTAURANTS_STORE,'readwrite'); 
+      tx.objectStore(RESTAURANTS_STORE).iterateCursor(cursor => {
+        if (!cursor) return;
+        if(cursor.value.id && cursor.value.id === id) {
+          CommonHelper.updateJsonObjByAnotherObj(cursor.value, changedPropsOfRestaurant);
+          return cursor.update(cursor.value);
+        }
+        cursor.continue();
+      });
+
+      tx.complete.then(() => console.log(`Updated restaurant of if=${id} with data:`, changedPropsOfRestaurant));
+    }).catch((err)=>{
+      return Promise.reject(err);
+    })
   }
 
   getRestaurantById(id) {
