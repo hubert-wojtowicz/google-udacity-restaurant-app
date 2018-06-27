@@ -8,6 +8,15 @@ var RESTAURANTS_DATABASE = 'restaurant-db';
  * Common database helper functions.
  */
 export default class DBHelper {
+  /**
+   * Database URL.
+   * Change this to restaurants.json file location on your server.
+   */
+  get DATABASE_URL() {
+    const port = 1337; // Change this to your server port
+    return `http://localhost:${port}/restaurants`;
+  }
+
   constructor() {
     this.dbPromise = this.openDatabase();
     var dbhelper = this;
@@ -52,8 +61,14 @@ export default class DBHelper {
   }
 
   updateRestaurantById(id, changedPropsOfRestaurant) {
-    //todo
     console.log(`There will be restaurang of if=${id} updated with:`, changedPropsOfRestaurant);
+    // this.dbPromise.then(db => {
+    //   const tx = db.transaction(RESTAURANTS_STORE,'readwrite');
+    //   const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE); 
+    //   restaurantObjStore.c
+    // }).catch((err)=>{
+    //   return Promise.reject(err);
+    // })
   }
 
   getRestaurantById(id) {
@@ -143,15 +158,6 @@ export default class DBHelper {
       const neighborhoodUnique = Array.from(new Set(neighborhoodDuplicated));
       return new Promise((resolve,reject) => resolve(neighborhoodUnique));
     });
-  }
-
-  /**
-   * Database URL.
-   * Change this to restaurants.json file location on your server.
-   */
-  get DATABASE_URL() {
-    const port = 1337; // Change this to your server port
-    return `http://localhost:${port}/restaurants`;
   }
   
   /**
