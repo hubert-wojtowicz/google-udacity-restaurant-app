@@ -9,8 +9,8 @@ export default class FavouriteManager {
         this.containerElement = containerElement;
         this.button = null;
 
-        this.emptyStar = '☆';
-        this.fullStar = '★';
+        this.emptyHeart = '♡';
+        this.fullHeart = '♥';
 
         this.render();
     }
@@ -29,7 +29,7 @@ export default class FavouriteManager {
     }
 
     getCurrentStar() {
-        return this.isFavorite ? this.fullStar : this.emptyStar;
+        return this.isFavorite ? this.fullHeart : this.emptyHeart;
     }
 
 

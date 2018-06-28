@@ -153,8 +153,8 @@ export default class MainPage {
     li.append(image);
 
     const name = document.createElement('h2');
-    const fullStar = restaurant.is_favorite;
-    name.innerHTML = `${fullStar ? '★ ': '☆ '}${restaurant.name}`;
+    const fullHeart = restaurant.is_favorite;
+    name.innerHTML = `${fullHeart ? '♥ ': '♡ '}${restaurant.name}`;
     li.append(name);
 
     const neighborhood = document.createElement('p');
