@@ -1,14 +1,16 @@
 #review-form {
     display: grid;
-
+    
     .review-form-input-text {
-        margin: 10px;        
+        font-family: monospace;
+        margin: 10px;
     }
 
     textarea {
         margin: 10px;
         resize: none;
         height: 1.2em;
+        overflow: hidden;
     }
 
     textarea:focus {
@@ -21,5 +23,20 @@
     }
     .review-form-submit::after {
         content:'Submit review'; 
+    }
+
+    .review-form-rate-manager {
+        margin-left: auto;
+        margin-right: auto;
+
+        button {
+            border: none;
+            outline: none;
+            background: transparent;
+            color: orange;
+            font-size: 3em;
+            font-weight: bold;
+            cursor: pointer;
+        }
     }
 }
