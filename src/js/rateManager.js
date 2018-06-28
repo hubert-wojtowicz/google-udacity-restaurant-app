@@ -41,6 +41,5 @@ export default class RateManager {
     onClick(event) {
         this.currentRate = event.target.classList[0];
         this.valueElemStorage.value = this.currentRate;
-        console.log(`Current rate changed to ${this.valueElemStorage.value}`);
     }
 }

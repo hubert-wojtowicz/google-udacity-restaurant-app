@@ -39,4 +39,15 @@
             cursor: pointer;
         }
     }
+
+    .review-form-validation-box {
+        border: 1px solid orangered;
+        color: orangered;
+        font-weight: bold;
+        padding: 5px;
+        margin: 10px;
+    }
+    .review-form-validation-box.valid {
+        display: none;
+    }
 }

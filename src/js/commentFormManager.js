@@ -7,6 +7,7 @@ export default class CommentFormManager {
         this.rateManager = null;
         this.formElem = {
             headerText: null,
+            validationBoxText: null,
             rateHidden: null,
             rateManagerContainer: null,
             authorInputText: null,
@@ -14,11 +15,15 @@ export default class CommentFormManager {
             submitBtn: null
         };
 
-        this.render();
+        this._render();
     }
-    render() {
+    _render() {
         this.formElem.headerText = document.createElement('h3');
         this.formElem.headerText.innerHTML = "Add new review";
+
+        this.formElem.validationBoxText = document.createElement('div');
+        this.formElem.validationBoxText.classList.add('review-form-validation-box', 'valid');
+        this.formElem.validationBoxText.innerHTML = "This is sample validation msg";
 
         this.formElem.rateHidden = document.createElement('input');
         this.formElem.rateHidden.id = 'review-form-rete-hidden';
@@ -45,7 +50,7 @@ export default class CommentFormManager {
         this.formElem.submitBtn = document.createElement('button');
         this.formElem.submitBtn.id = 'review-form-submit-btn';
         this.formElem.submitBtn.classList.add('review-form-submit');
-        this.formElem.submitBtn.addEventListener('click', this.onSubmit.bind(this));
+        this.formElem.submitBtn.addEventListener('click', this._onSubmit.bind(this));
         
         // create each form element
         for(let formElemKey in this.formElem)
@@ -54,8 +59,41 @@ export default class CommentFormManager {
         }
     }
 
-    onSubmit() {
-        console.log('form submited...',this);
-        //this.db.updateRestaurantById(this.restaurant, ...)
+    _validate() {
+        let msg = new Array();
+        
+        const minAuthorNameLength = 3;
+        if(!this.formElem.authorInputText.value || 
+            this.formElem.authorInputText.value.length < minAuthorNameLength)
+            msg.push(`There should be author name longer than ${minAuthorNameLength} characters.`);
+
+        const minCommentTextLength = 10;
+        if(!this.formElem.commentTextarea.value || 
+            this.formElem.commentTextarea.value.length < minCommentTextLength)   
+            msg.push(`There should be comment at least ${minCommentTextLength} characters lenght.`);
+
+        return msg;
+    }
+
+    _onSubmit() {
+        const validationMsg = this._validate();
+
+        this.formElem.validationBoxText.classList.add("valid");
+        if(validationMsg.length > 0) {
+            this.formElem.validationBoxText.innerHTML = validationMsg.join('</br>');
+            this.formElem.validationBoxText.classList.remove('valid');
+        }
+
+        const newReview = {
+            name: this.formElem.authorInputText.value,
+            rating: this.formElem.rateHidden.value,
+            comments: this.formElem.commentTextarea.value,
+        }
+
+        // TODO
+        // this.db.addNewReview(this.restaurant, rest)
+        // .then(review => {
+            
+        // });
     }
 }

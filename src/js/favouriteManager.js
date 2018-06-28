@@ -12,29 +12,28 @@ export default class FavouriteManager {
         this.emptyHeart = '♡';
         this.fullHeart = '♥';
 
-        this.render();
+        this._render();
     }
     
-    render() {
+    _render() {
         this.button = document.createElement("button");
         this.button.classList.add('favourite-restaurant-button');
-        this.button.innerHTML = this.getCurrentStar()
-        this.button.addEventListener('click', this.onClick.bind(this));
+        this.button.innerHTML = this._getCurrentStar()
+        this.button.addEventListener('click', this._onClick.bind(this));
         this.containerElement.appendChild(this.button);
     }
 
-    update() {
+    _update() {
         this.db.updateRestaurantById(this.restaurant.id, { is_favorite: this.isFavorite });
-        this.button.innerHTML = this.getCurrentStar();
+        this.button.innerHTML = this._getCurrentStar();
     }
 
-    getCurrentStar() {
+    _getCurrentStar() {
         return this.isFavorite ? this.fullHeart : this.emptyHeart;
     }
 
-
-    onClick(event) {
+    _onClick(event) {
         this.restaurant.is_favorite = !this.isFavorite;
-        this.update();
+        this._update();
     }
 }
