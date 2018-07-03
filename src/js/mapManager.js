@@ -10,7 +10,7 @@ export default class MapManager {
         this.markers = [];
         this.mapInjectionDiv = document.getElementById("map"); 
         this.mapContainer = document.getElementById("map-container");
-        this.mapButton = document.getElementById("map-icon");
+        this.mapButton = document.getElementById("map-btn");
         this.loadImidaiately = loadImidaiately;
 
         if(loadImidaiately) {
@@ -40,9 +40,7 @@ export default class MapManager {
     }
     
     _expandOrCollapseMap(event = null) {
-        let currentTarget = null;
-        if(!this.loadImidaiately)
-             currentTarget = event.currentTarget;
+        let currentTarget = event ? event.currentTarget : null;
 
         loadGoogleMapsApi({
             key: '{{GOOGLE_MAPS.API_KEY}}',
@@ -60,11 +58,9 @@ export default class MapManager {
                 this.addMarkers(this.restaurants);
             }
         }).then(()=>{
-            if(!this.loadImidaiately){
-                this._changeMapIcon(currentTarget);
-                this._changeVisibility();
-                this.expanded = !this.expanded;
-            }
+            this._changeMapIcon(currentTarget);
+            this._changeVisibility();
+            this.expanded = !this.expanded;
         })
         .catch((err)=>{
             this.map = null;
@@ -73,9 +69,11 @@ export default class MapManager {
     }
 
     _changeMapIcon(buttonParent) {
+        if(buttonParent == null) return;
+
         this._changeIconText();
-        buttonParent.children[0].classList.toggle("far", this.expanded);
-        buttonParent.children[0].classList.toggle("fas", !this.expanded);
+        buttonParent.children[0].classList.toggle("btn-expanded", !this.expanded);
+        buttonParent.children[0].classList.toggle("btn-collapsed", this.expanded);
     }
 
     _changeVisibility() {

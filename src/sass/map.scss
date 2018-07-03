@@ -10,13 +10,27 @@
     #map-container.collapsed {
       height: 0;
     }
-    .map-icon-main-page {
-      font-size: 1em;
+
+    .map-btn-main-page {
       float: right;
       margin: 7px 7px;
+      span {
+        font-size: 2.5em;
+      }
       i {
         font-size: 4em;
       }
+    }
+    
+    #map-btn .btn-collapsed {
+      color: black;
+    } 
+    #map-btn .btn-expanded {
+      color: #7E1D1C;
+    }
+
+    #map-btn:focus {
+      box-shadow: 0 0 3pt 2pt black;
     }
   }
   
@@ -29,7 +43,7 @@
     height: 100%;
   }
   
-  #map-icon {
+  #map-btn {
     border:none; 
     font: inherit;
     cursor: pointer;
