@@ -127,7 +127,12 @@ export default class MainPage {
    */
   fillRestaurantsHTML(restaurants) {
     const ul = document.getElementById('restaurants-list');
-    restaurants.forEach(restaurant => {
+    restaurants.sort((x,y) => {
+      // keep favourite restaurants always in front of list
+      let _x = (x.is_favorite) ? (CommonHelper.strToBool(x.is_favorite) ? 1 : -1) : -1;
+      let _y = (y.is_favorite) ? (CommonHelper.strToBool(y.is_favorite) ? 1 : -1) : -1;
+      return -(_x - _y);  
+    }).forEach(restaurant => {
       ul.append(this.createRestaurantHTML(restaurant));
     });
     
