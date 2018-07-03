@@ -19,16 +19,15 @@ export default class CommentFormManager {
     }
     _render() {
         this.formElem.headerText = document.createElement('h3');
-        this.formElem.headerText.innerHTML = "Add new review";
+        this.formElem.headerText.innerHTML = 'Add new review';
 
         this.formElem.validationBoxText = document.createElement('div');
-        this.formElem.validationBoxText.classList.add('review-form-validation-box', 'valid');
-        this.formElem.validationBoxText.innerHTML = "This is sample validation msg";
+        this.formElem.validationBoxText.classList.add('review-form-validation-box', 'none');
 
         this.formElem.rateHidden = document.createElement('input');
         this.formElem.rateHidden.id = 'review-form-rete-hidden';
         this.formElem.rateHidden.setAttribute('type','hidden');
-        this.formElem.rateHidden.value = 0;
+        this.formElem.rateHidden.value = 1;
 
         this.formElem.rateManagerContainer = document.createElement('div');
         this.formElem.rateManagerContainer.classList.add('review-form-rate-manager');
@@ -77,23 +76,57 @@ export default class CommentFormManager {
 
     _onSubmit() {
         const validationMsg = this._validate();
-
-        this.formElem.validationBoxText.classList.add("valid");
-        if(validationMsg.length > 0) {
-            this.formElem.validationBoxText.innerHTML = validationMsg.join('</br>');
-            this.formElem.validationBoxText.classList.remove('valid');
-        }
-
+        this._addValidationMsg(validationMsg);
+        
         const newReview = {
             name: this.formElem.authorInputText.value,
             rating: this.formElem.rateHidden.value,
             comments: this.formElem.commentTextarea.value,
         }
-
+        
         // TODO
         // this.db.addNewReview(this.restaurant, rest)
         // .then(review => {
             
-        // });
+            // });
+        
+        if(validationMsg.length == 0) {
+            this._showSuccessMsg();  
+            this._resetForm();
+        }
+    }
+    
+    _addValidationMsg(validationMsg) {
+        if(validationMsg.length > 0) {
+            this._enableValidation();
+            this.formElem.validationBoxText.classList.add('invalid');
+            this.formElem.validationBoxText.innerHTML = validationMsg.join('</br>');   
+        }
+    }
+
+    _showSuccessMsg() {
+        this._enableValidation();
+        this.formElem.validationBoxText.classList.add('valid');
+        this.formElem.validationBoxText.innerHTML = 'The form has been submited successfully!';
+        let f = this._cleanValidation;
+        setInterval(function() {
+            this._cleanValidation();
+        }.bind(this),1500);
+    }
+
+    _enableValidation() {
+        this.formElem.validationBoxText.classList.remove('none');
+    }
+
+    _cleanValidation() {
+        this.formElem.validationBoxText.classList.remove('valid', 'invalid'); 
+        this.formElem.validationBoxText.classList.add('none'); 
+        this.formElem.validationBoxText.innerHTML = '';
+    }
+
+    _resetForm() {
+        this.formElem.rateHidden.value = 1;
+        this.formElem.authorInputText.value = "";
+        this.formElem.commentTextarea.value = "";
     }
 }
