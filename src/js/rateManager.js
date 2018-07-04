@@ -25,10 +25,15 @@ export default class RateManager {
         }
     }
 
-    onMouseLeave() {
+    reset(rateToSet = this.currentRate) {
+        this.currentRate = rateToSet;
         for(let i = 0;  i < this.MAX_RATE; i++) {
             this.rateManagerContainer.children[i].innerHTML = (this.currentRate > i) ? this.fullStar : this.emptyStar;
         }
+    }
+
+    onMouseLeave() {
+        this.reset();
     }
 
     onMouseOver(event) {

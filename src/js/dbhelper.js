@@ -8,13 +8,17 @@ var RESTAURANTS_DATABASE = 'restaurant-db';
  * Common database helper functions.
  */
 export default class DBHelper {
-  /**
-   * Database URL.
-   * Change this to restaurants.json file location on your server.
-   */
-  get DATABASE_URL() {
-    const port = 1337; // Change this to your server port
-    return `http://localhost:${port}/restaurants`;
+
+  get SERVER_PORT() {
+    return 1337;
+  }
+
+  get DATABASE_URL() { 
+    return `http://localhost:${this.SERVER_PORT}/restaurants`;
+  }
+
+  get ADD_REVIEW_URL() {
+    return `http://localhost:${this.SERVER_PORT}/reviews/`;
   }
 
   constructor() {
@@ -31,6 +35,20 @@ export default class DBHelper {
       restStore.createIndex('cuisine', 'cuisine_type');
       restStore.createIndex('neighborhood', 'neighborhood');
       restStore.createIndex('cuisineNeighborhood', ['cuisine_type', 'neighborhood']);
+    });
+  }
+
+  addRestaurantReview(restaurantReviewModel) {
+    return fetch(this.ADD_REVIEW_URL, {
+      method: 'POST',
+      body: JSON.stringify(restaurantReviewModel),
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    }).then((response)=>{
+      return response.json();
+    }).then((responseBody)=>{
+      return responseBody;
     });
   }
 

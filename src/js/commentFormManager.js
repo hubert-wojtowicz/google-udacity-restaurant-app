@@ -1,4 +1,5 @@
 import RateManager from './rateManager'; 
+
 export default class CommentFormManager {
     constructor(restaurant, containerElement, db) {
         this.db = db;
@@ -79,16 +80,17 @@ export default class CommentFormManager {
         this._addValidationMsg(validationMsg);
         
         const newReview = {
-            name: this.formElem.authorInputText.value,
-            rating: this.formElem.rateHidden.value,
-            comments: this.formElem.commentTextarea.value,
-        }
-        
-        // TODO
-        // this.db.addNewReview(this.restaurant, rest)
-        // .then(review => {
-            
-            // });
+            'restaurant_id': this.restaurant.id,
+            'name': this.formElem.authorInputText.value,
+            'rating': this.formElem.rateHidden.value,
+            'comments': this.formElem.commentTextarea.value
+          };
+
+        this.db.addRestaurantReview(newReview)
+        .then((review) => {
+            // adding review to current form
+            //this.addRevievCallback(review);
+        }).catch(err => console.log(err));
         
         if(validationMsg.length == 0) {
             this._showSuccessMsg();  
@@ -125,6 +127,7 @@ export default class CommentFormManager {
     }
 
     _resetForm() {
+        this.rateManager.reset(1);
         this.formElem.rateHidden.value = 1;
         this.formElem.authorInputText.value = "";
         this.formElem.commentTextarea.value = "";
