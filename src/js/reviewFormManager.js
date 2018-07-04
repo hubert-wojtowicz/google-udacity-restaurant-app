@@ -1,11 +1,13 @@
 import RateManager from './rateManager'; 
+import FavouriteManager from './favouriteManager';
 
-export default class CommentFormManager {
+export default class ReviewFormManager {
     constructor(restaurant, containerElement, db) {
         this.db = db;
         this.restaurant = restaurant;
         this.containerElement = containerElement;
         this.rateManager = null;
+        this.favouriteManager = null;
         this.formElem = {
             headerText: null,
             validationBoxText: null,
@@ -15,6 +17,9 @@ export default class CommentFormManager {
             commentTextarea: null,
             submitBtn: null
         };
+        
+        const favouriteRestaurantContainer = document.getElementById('restaurant-is-favourite');
+        this.favouriteManager = new FavouriteManager(restaurant, favouriteRestaurantContainer, this.db);
 
         this._render();
     }

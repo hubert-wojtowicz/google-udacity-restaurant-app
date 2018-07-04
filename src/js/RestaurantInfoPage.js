@@ -1,7 +1,6 @@
 import CommonHelper from './commonHelper';
 import MapManager from './mapManager';
-import Favourite from './favouriteManager';
-import CommentFormManager from './commentFormManager';
+import ReviewFormManager from './reviewFormManager';
 
 const MAX_RATING = 5;
 
@@ -10,7 +9,6 @@ export default class RestaurantInfoPage {
     this.db = db;
     this.restaurant = null;
     this.mapManager = null;
-    this.favouriteManager = null;
     this.reviewForm = null;
     
     document.addEventListener('DOMContentLoaded', this.onDOMContentLoaded.bind(this));
@@ -21,11 +19,8 @@ export default class RestaurantInfoPage {
     .then(restaurant => {
       this.mapManager = new MapManager([restaurant], true);
 
-      const favouriteRestaurantContainer = document.getElementById('restaurant-is-favourite');
-      this.favouriteManager = new Favourite(restaurant, favouriteRestaurantContainer, this.db);
-
       const reviewFormContainer = document.getElementById('review-form');
-      this.reviewForm = new CommentFormManager(restaurant, reviewFormContainer, this.db);
+      this.reviewForm = new ReviewFormManager(restaurant, reviewFormContainer, this.db);
 
       this.fillBreadcrumb();
       this.fillRestaurantHTML(restaurant);
