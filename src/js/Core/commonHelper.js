@@ -1,5 +1,4 @@
 export default class CommonHelper {
-
   /**
    * Get a parameter by name from page URL.
    */

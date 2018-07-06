@@ -80,10 +80,9 @@ export default class RestaurantInfoPage {
       this.fillRestaurantHoursHTML();
     }
     // fill reviews
-
-    // move responsibility to
-    //this.reviewFormManager.fillReviewsHTML();
-    this.fillReviewsHTML();
+    this.db.getReviewsByRestaurantId(this.restaurant.id).then(restaurantReviews =>{
+      this.fillReviewsHTML(restaurantReviews);
+    });
   }
   
   /**
@@ -109,7 +108,7 @@ export default class RestaurantInfoPage {
   /**
    * Create all reviews HTML and add them to the webpage.
    */
-  fillReviewsHTML(reviews = this.restaurant.reviews) {
+  fillReviewsHTML(reviews) {
     const container = document.getElementById('review-list-container');
     const title = document.createElement('h3');
     title.innerHTML = 'Reviews';
@@ -153,7 +152,6 @@ export default class RestaurantInfoPage {
     const pullLeftContainer = document.createElement('div');
     pullLeftContainer.setAttribute('class','pull-left');
     rewiewHeader.appendChild(pullLeftContainer);
-    
     const name = document.createElement('p');
     name.innerHTML = review.name;
     name.setAttribute('arial-label', 'Review by ' + review.name);
@@ -166,7 +164,8 @@ export default class RestaurantInfoPage {
   
     const date = document.createElement('p');
     date.setAttribute('class','pull-right');  
-    date.innerHTML = review.date;
+    const datetime = new Date(review.createdAt)
+    date.innerHTML = `${datetime.toLocaleTimeString()} ${datetime.toLocaleDateString()}`;
     date.setAttribute('arial-label','Date of review');
     rewiewHeader.appendChild(date);
   

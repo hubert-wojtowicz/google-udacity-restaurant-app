@@ -1,32 +1,19 @@
 import idb from 'idb';
 import CommonHelper from './commonHelper';
+import HttpClientHelper from './httpClientHelper';
 
-var RESTAURANTS_STORE = 'restaurants';
 var RESTAURANTS_DATABASE = 'restaurant-db';
 
-/**
- * Common database helper functions.
- */
+var RESTAURANTS_STORE = 'restaurants';
+var REVIEWS_STORE = 'reviews';
+
 export default class DBHelper {
-
-  get SERVER_PORT() {
-    return 1337;
-  }
-
-  get DATABASE_URL() { 
-    return `http://localhost:${this.SERVER_PORT}/restaurants`;
-  }
-
-  get ADD_REVIEW_URL() {
-    return `http://localhost:${this.SERVER_PORT}/reviews/`;
-  }
-
   constructor() {
+    this.httpClient = new HttpClientHelper();
     this.dbPromise = this.openDatabase();
-    var dbhelper = this;
-    this.dbPromise.then((db)=>{
-      dbhelper.updateDatabase();
-    });
+    this.dbPromise.then((db=>{
+      this.updateDatabase();
+    }).bind(this));
   }
 
   openDatabase() {
@@ -35,48 +22,58 @@ export default class DBHelper {
       restStore.createIndex('cuisine', 'cuisine_type');
       restStore.createIndex('neighborhood', 'neighborhood');
       restStore.createIndex('cuisineNeighborhood', ['cuisine_type', 'neighborhood']);
-    });
-  }
 
-  addRestaurantReview(restaurantReviewModel) {
-    return fetch(this.ADD_REVIEW_URL, {
-      method: 'POST',
-      body: JSON.stringify(restaurantReviewModel),
-      headers:{
-        'Content-Type': 'application/json'
-      }
-    }).then((response)=>{
-      return response.json();
-    }).then((responseBody)=>{
-      return responseBody;
+      let reviewStore = upgradeDB.createObjectStore(REVIEWS_STORE, {keyPath: 'id'});
+      reviewStore.createIndex('restaurantId','restaurant_id');
     });
   }
 
   updateDatabase() {
-    // todo: updating db maybe by index 'updatedAt'
-    // for now if id=10 is in idb then no fetch from server
-    this.getRestaurantById(10).then((val)=>{
-
+    this.getRestaurantById(10).then((val=>{
       if(!val) {
-        this.fetchRestaurants((error, fetchedRestaurants) => {
-          if(error) {
-          console.log(`Error while fetching restaurants: ${error}`);
-          return;
-          }  
-
-          for(let fetchedRestaurant of fetchedRestaurants) {  
-            this.getRestaurantById(fetchedRestaurant.id).then((restaurant)=>{
-              if(restaurant) return;
-              this.addRestaurant(fetchedRestaurant);
-            }).catch((err)=>{
-              console.log(err);
-            })
-          } 
+        this.httpClient.getAllRestaurants().then((restaurants => {
+          for(let restaurant of restaurants) { 
+            this.addRestaurant(restaurant);
+            this.httpClient.getRestaurantReviews(restaurant.id).then((reviews => {
+              reviews.forEach((reveiw => {
+                this.addRestaurantReview(reveiw) 
+              }).bind(this));
+            }).bind(this));
+          }
+        }).bind(this))
+        .catch(err => {
+          console.log(`Error while fetching restaurants: ${err}`);
         });
       }
+    }).bind(this))
+    .catch(console.log);
+  }
 
+  //////////////////////////////////////    ADD       //////////////////////////////////////      
+
+  addRestaurantReview(review) {
+    this.dbPromise.then(db=>{
+      const tx = db.transaction(REVIEWS_STORE,'readwrite');
+      const reviewObjStore = tx.objectStore(REVIEWS_STORE); 
+      reviewObjStore.put(review);
+      return tx.complete;
+    }).catch((err)=>{
+      console.log(`Error while adding restaurant review ${review} to idb: ${err}`);
     });
   }
+
+  addRestaurant(restaurant) {
+    this.dbPromise.then(db=>{
+      const tx = db.transaction(RESTAURANTS_STORE,'readwrite');
+      const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE); 
+      restaurantObjStore.put(restaurant);
+      return tx.complete;
+    }).catch((err)=>{
+      console.log(`Error while adding restaurant ${restaurant} to idb: ${err}`);
+    });
+  }
+
+  //////////////////////////////////////    UPDATE    //////////////////////////////////////
 
   updateRestaurantById(id, changedPropsOfRestaurant) {
     this.dbPromise.then(db => {
@@ -96,26 +93,7 @@ export default class DBHelper {
     })
   }
 
-  getRestaurantById(id) {
-    return this.dbPromise.then((db)=>{
-      const tx = db.transaction(RESTAURANTS_STORE);
-      const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE);
-      return restaurantObjStore.get(id);
-    }).catch((err)=>{
-      return Promise.reject(err);
-    })
-  }
-
-  addRestaurant(restaurant) {
-    this.dbPromise.then((db)=>{
-      const tx = db.transaction(RESTAURANTS_STORE,'readwrite');
-      const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE); 
-      restaurantObjStore.put(restaurant);
-      return tx.complete;
-    }).catch((err)=>{
-      console.log(`Error while adding restaurant ${restaurant} to idb: ${err}`);
-    });
-  }
+  //////////////////////////////////////    GET       ////////////////////////////////////// 
 
   getRestaurants() {
     return this.dbPromise.then((db)=>{
@@ -127,16 +105,21 @@ export default class DBHelper {
     });
   }
 
-  _getRestaurantsByIndex(databaseIndexName, filterValue) {
+  getRestaurantById(id) {
     return this.dbPromise.then((db)=>{
       const tx = db.transaction(RESTAURANTS_STORE);
       const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE);
-      const cuisineIndex = restaurantObjStore.index(databaseIndexName);
-      return cuisineIndex.getAll(filterValue);
-    })
-    .catch((err)=>{
-      return Promise.reject(err);
+      return restaurantObjStore.get(id);
     });
+  }
+
+  getReviewsByRestaurantId(restaurantId) {
+    return this.dbPromise.then((db)=>{
+      const tx = db.transaction(REVIEWS_STORE);
+      const reviweObjectStore = tx.objectStore(REVIEWS_STORE);
+      const reviwsByRestaurantIdIndex = reviweObjectStore.index('restaurantId');
+      return reviwsByRestaurantIdIndex.getAll(restaurantId);
+    })
   }
 
   getRestaurantsByCuisine(cuisine) {
@@ -185,19 +168,15 @@ export default class DBHelper {
     });
   }
   
-  /**
-   * Fetch all restaurants.
-   */
-  fetchRestaurants(callback) {
-    let req = new Request(this.DATABASE_URL);
-    fetch(req).then(response => response.json())
-    .then(restaurants => {
-      console.log(restaurants);
-      callback(null, restaurants);
+  _getRestaurantsByIndex(databaseIndexName, filterValue) {
+    return this.dbPromise.then((db)=>{
+      const tx = db.transaction(RESTAURANTS_STORE);
+      const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE);
+      const cuisineIndex = restaurantObjStore.index(databaseIndexName);
+      return cuisineIndex.getAll(filterValue);
     })
-    .catch((err) => {
-      const error = (`Request failed. Returned status of ${req.status}`);
-      callback(err, null)
-    })
+    .catch((err)=>{
+      return Promise.reject(err);
+    });
   }
 }
