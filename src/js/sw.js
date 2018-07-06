@@ -46,7 +46,9 @@ self.addEventListener('fetch', function(event) {
   });
 
 function fetchReq(request, cache){
-    return fetch(request).then(function(response) {    
+    return fetch(request).then(function(response) {  
+        if(request.method === 'POST') return response;
+          
         cache.put(request, response.clone());      
         return response;
     }).catch((err) => {
