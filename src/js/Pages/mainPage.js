@@ -1,5 +1,5 @@
-import MapManager from './mapManager';
-import CommonHelper from './commonHelper';
+import MapManager from '../Managers/mapManager';
+import CommonHelper from '../Core/commonHelper';
 
 export default class MainPage {
   constructor(db) {   

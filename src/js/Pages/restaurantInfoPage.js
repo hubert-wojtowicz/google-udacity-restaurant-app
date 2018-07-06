@@ -1,6 +1,6 @@
-import CommonHelper from './commonHelper';
-import MapManager from './mapManager';
-import ReviewFormManager from './reviewFormManager';
+import CommonHelper from '../Core/commonHelper';
+import MapManager from '../Managers/mapManager';
+import ReviewFormManager from '../Managers/reviewFormManager';
 
 const MAX_RATING = 5;
 
@@ -9,7 +9,7 @@ export default class RestaurantInfoPage {
     this.db = db;
     this.restaurant = null;
     this.mapManager = null;
-    this.reviewForm = null;
+    this.reviewFormManager = null;
     
     document.addEventListener('DOMContentLoaded', this.onDOMContentLoaded.bind(this));
   }
@@ -20,7 +20,7 @@ export default class RestaurantInfoPage {
       this.mapManager = new MapManager([restaurant], true);
 
       const reviewFormContainer = document.getElementById('review-form');
-      this.reviewForm = new ReviewFormManager(restaurant, reviewFormContainer, this.db);
+      this.reviewFormManager = new ReviewFormManager(restaurant, reviewFormContainer, this.db);
 
       this.fillBreadcrumb();
       this.fillRestaurantHTML(restaurant);
@@ -80,6 +80,9 @@ export default class RestaurantInfoPage {
       this.fillRestaurantHoursHTML();
     }
     // fill reviews
+
+    // move responsibility to
+    //this.reviewFormManager.fillReviewsHTML();
     this.fillReviewsHTML();
   }
   

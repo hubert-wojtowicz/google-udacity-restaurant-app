@@ -1,5 +1,5 @@
 import loadGoogleMapsApi from 'load-google-maps-api'; 
-import CommonHelper from './commonHelper';
+import CommonHelper from '../Core/commonHelper';
 
 export default class MapManager {
     constructor(restaurants, loadImidaiately=false) {

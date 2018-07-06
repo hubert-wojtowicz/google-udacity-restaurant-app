@@ -1,5 +1,5 @@
-import MainPage from './mainPage';
-import RestaurantInfoPage from './restaurantInfoPage';
+import MainPage from '../Pages/mainPage';
+import RestaurantInfoPage from '../Pages/restaurantInfoPage';
 import CommonHelper from './commonHelper';
 import DBHelper from './dbHelper';
 
