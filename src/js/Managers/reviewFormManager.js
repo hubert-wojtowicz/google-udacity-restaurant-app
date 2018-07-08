@@ -101,7 +101,7 @@ export default class ReviewFormManager {
                 'updatedAt': createDate
               };
             
-            
+            this.appendNewReview(newReview);
     
             this.httpClientHelper.postRestaurantReview(newReview)
             .then((addedReview => {
@@ -154,6 +154,10 @@ export default class ReviewFormManager {
         this.formElem.commentTextarea.value = "";
     }
 
+    appendNewReview(review) {
+        const ul = document.getElementById('reviews-list');
+        ul.appendChild(this.createReviewHTML(review));
+    }
 
     /**
      * Create all reviews HTML and add them to the webpage.
