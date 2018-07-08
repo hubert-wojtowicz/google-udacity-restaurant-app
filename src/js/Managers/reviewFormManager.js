@@ -86,13 +86,13 @@ export default class ReviewFormManager {
     }
 
     _onSubmit() {
-        debugger;
         const validationMsg = this._validate();
         this._addValidationMsg(validationMsg);
                       
         if(validationMsg.length == 0) {
             let createDate = new Date().getTime();
             const newReview = {
+                'id': null,
                 'restaurant_id': this.restaurant.id,
                 'name': this.formElem.authorInputText.value,
                 'rating': this.formElem.rateHidden.value,
@@ -105,15 +105,9 @@ export default class ReviewFormManager {
     
             this.httpClientHelper.postRestaurantReview(newReview)
             .then((addedReview => {
-                debugger;
-                // store it in IDB
-                // this.db.addRestaurantReview(addedReview)
-                // .then(review => {
-    
-                // })
-                // .catch(err => console.log('>>>>>>>>>>>',err));
-    
-            }).bind(this));
+                this.db.addRestaurantReview(addedReview);
+            }).bind(this))
+            .catch(console.log);
             this._showSuccessMsg();  
         }
         this._resetForm();
