@@ -3,6 +3,9 @@ import FavouriteManager from './favouriteManager';
 import HttpClientHelper from '../Core/httpClientHelper';
 
 export default class ReviewFormManager {
+    get MAX_RATING() {
+        return 5;
+    }
     constructor(restaurant, containerElement, db) {
         this.httpClientHelper = new HttpClientHelper();
         this.db = db;
@@ -149,5 +152,73 @@ export default class ReviewFormManager {
         this.formElem.rateHidden.value = 1;
         this.formElem.authorInputText.value = "";
         this.formElem.commentTextarea.value = "";
+    }
+
+
+    /**
+     * Create all reviews HTML and add them to the webpage.
+     */
+    fillReviewsHTML(reviews) {
+        const container = document.getElementById('review-list-container');
+        const title = document.createElement('h3');
+        title.innerHTML = 'Reviews';
+        container.appendChild(title);
+    
+        if (!reviews) {
+        const noReviews = document.createElement('p');
+        noReviews.innerHTML = 'No reviews yet!';
+        container.appendChild(noReviews);
+        return;
+        }
+        const ul = document.getElementById('reviews-list');
+        reviews.forEach(review => {
+        ul.appendChild(this.createReviewHTML(review));
+        });
+        container.appendChild(ul);
+    }
+
+    /**
+     * Create review HTML and add it to the webpage.
+     */
+    createReviewHTML(review) {
+        const li = document.createElement('li');
+    
+        li.appendChild(this.createReviewHeader(review));
+    
+        const comments = document.createElement('p');
+        comments.setAttribute('class','review-essence');  
+        comments.setAttribute('arial-label', 'Review essence');
+        
+        comments.innerHTML = review.comments;
+        li.appendChild(comments);
+    
+        return li;
+    }
+    
+    createReviewHeader(review) {
+        const rewiewHeader = document.createElement('div');
+        rewiewHeader.setAttribute('class','review-header');
+    
+        const pullLeftContainer = document.createElement('div');
+        pullLeftContainer.setAttribute('class','pull-left');
+        rewiewHeader.appendChild(pullLeftContainer);
+        const name = document.createElement('p');
+        name.innerHTML = review.name;
+        name.setAttribute('arial-label', 'Review by ' + review.name);
+        pullLeftContainer.appendChild(name);
+    
+        const rating = document.createElement('p');
+        rating.innerHTML = "★".repeat(review.rating) + "☆".repeat(this.MAX_RATING - review.rating);
+        rating.setAttribute('arial-label', `Resraurant rate ${review.rating}/${this.MAX_RATING}`);
+        pullLeftContainer.appendChild(rating);
+    
+        const date = document.createElement('p');
+        date.setAttribute('class','pull-right');  
+        const datetime = new Date(review.createdAt)
+        date.innerHTML = `${datetime.toLocaleTimeString()} ${datetime.toLocaleDateString()}`;
+        date.setAttribute('arial-label','Date of review');
+        rewiewHeader.appendChild(date);
+    
+        return rewiewHeader;
     }
 }
