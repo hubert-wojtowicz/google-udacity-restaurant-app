@@ -36,7 +36,7 @@ export default class DBHelper {
             this.addRestaurant(restaurant);
             this.httpClient.getRestaurantReviews(restaurant.id).then((reviews => {
               reviews.forEach((reveiw => {
-                this.addRestaurantReview(reveiw) 
+                this.addRestaurantReview(reveiw);
               }).bind(this));
             }).bind(this));
           }
@@ -52,10 +52,10 @@ export default class DBHelper {
   //////////////////////////////////////    ADD       //////////////////////////////////////      
 
   addRestaurantReview(review) {
-    this.dbPromise.then(db=>{
+    return this.dbPromise.then(db=>{
       const tx = db.transaction(REVIEWS_STORE,'readwrite');
       const reviewObjStore = tx.objectStore(REVIEWS_STORE); 
-      reviewObjStore.put(review);
+      reviewObjStore.add(review);
       return tx.complete;
     }).catch((err)=>{
       console.log(`Error while adding restaurant review ${review} to idb: ${err}`);
@@ -78,7 +78,7 @@ export default class DBHelper {
   updateRestaurantById(id, changedPropsOfRestaurant) {
     this.dbPromise.then(db => {
       const tx = db.transaction(RESTAURANTS_STORE,'readwrite'); 
-      tx.objectStore(RESTAURANTS_STORE).iterateCursor(cursor => {
+      tx.objectStore(RESTAURANTS_STORE).iterateCursor(cursor => { 
         if (!cursor) return;
         if(cursor.value.id && cursor.value.id === id) {
           CommonHelper.updateJsonObjByAnotherObj(cursor.value, changedPropsOfRestaurant);
@@ -88,9 +88,7 @@ export default class DBHelper {
       });
 
       tx.complete.then(() => console.log(`Updated restaurant of if=${id} with data:`, changedPropsOfRestaurant));
-    }).catch((err)=>{
-      return Promise.reject(err);
-    })
+    }).catch(e => console.log(e));
   }
 
   //////////////////////////////////////    GET       ////////////////////////////////////// 

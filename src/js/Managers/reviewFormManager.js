@@ -1,8 +1,10 @@
 import RateManager from './rateManager'; 
 import FavouriteManager from './favouriteManager';
+import HttpClientHelper from '../Core/httpClientHelper';
 
 export default class ReviewFormManager {
     constructor(restaurant, containerElement, db) {
+        this.httpClientHelper = new HttpClientHelper();
         this.db = db;
         this.restaurant = restaurant;
         this.containerElement = containerElement;
@@ -20,7 +22,7 @@ export default class ReviewFormManager {
         
         const favouriteRestaurantContainer = document.getElementById('restaurant-is-favourite');
         this.favouriteManager = new FavouriteManager(restaurant, favouriteRestaurantContainer, this.db);
-
+        
         this._render();
     }
     _render() {
@@ -81,26 +83,37 @@ export default class ReviewFormManager {
     }
 
     _onSubmit() {
+        debugger;
         const validationMsg = this._validate();
         this._addValidationMsg(validationMsg);
-        
-        const newReview = {
-            'restaurant_id': this.restaurant.id,
-            'name': this.formElem.authorInputText.value,
-            'rating': this.formElem.rateHidden.value,
-            'comments': this.formElem.commentTextarea.value
-          };
-
-        this.db.addRestaurantReview(newReview)
-        .then((review) => {
-            // adding review to current form
-            //this.addRevievCallback(review);
-        }).catch(err => console.log(err));
-        
+                      
         if(validationMsg.length == 0) {
+            let createDate = new Date().getTime();
+            const newReview = {
+                'restaurant_id': this.restaurant.id,
+                'name': this.formElem.authorInputText.value,
+                'rating': this.formElem.rateHidden.value,
+                'comments': this.formElem.commentTextarea.value,
+                'createdAt': createDate,
+                'updatedAt': createDate
+              };
+            
+            
+    
+            this.httpClientHelper.postRestaurantReview(newReview)
+            .then((addedReview => {
+                debugger;
+                // store it in IDB
+                // this.db.addRestaurantReview(addedReview)
+                // .then(review => {
+    
+                // })
+                // .catch(err => console.log('>>>>>>>>>>>',err));
+    
+            }).bind(this));
             this._showSuccessMsg();  
-            this._resetForm();
         }
+        this._resetForm();
     }
     
     _addValidationMsg(validationMsg) {
