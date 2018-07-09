@@ -1,6 +1,6 @@
 import idb from 'idb';
 import CommonHelper from './commonHelper';
-import HttpClientHelper from './httpClientHelper';
+import HttpClient from './httpClient';
 
 var RESTAURANTS_DATABASE = 'restaurant-db';
 
@@ -9,7 +9,7 @@ var REVIEWS_STORE = 'reviews';
 
 export default class DBHelper {
   constructor() {
-    this.httpClient = new HttpClientHelper();
+    this.httpClient = new HttpClient();
     this.dbPromise = this.openDatabase();
     this.dbPromise.then((db=>{
       this.updateDatabase();

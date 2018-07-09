@@ -1,13 +1,13 @@
 import RateManager from './rateManager'; 
 import FavouriteManager from './favouriteManager';
-import HttpClientHelper from '../Core/httpClientHelper';
+import HttpClient from '../Core/httpClient';
 
 export default class ReviewFormManager {
     get MAX_RATING() {
         return 5;
     }
     constructor(restaurant, containerElement, db) {
-        this.httpClientHelper = new HttpClientHelper();
+        this.httpClient = new HttpClient();
         this.db = db;
         this.restaurant = restaurant;
         this.containerElement = containerElement;
@@ -103,7 +103,7 @@ export default class ReviewFormManager {
             
             this.appendNewReview(newReview);
     
-            this.httpClientHelper.postRestaurantReview(newReview)
+            this.httpClient.postRestaurantReview(newReview)
             .then((addedReview => {
                 this.db.addRestaurantReview(addedReview);
             }).bind(this))

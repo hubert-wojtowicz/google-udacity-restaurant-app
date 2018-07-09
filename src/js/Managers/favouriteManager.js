@@ -1,9 +1,12 @@
+import HttpClient from '../Core/httpClient';
+
 export default class FavouriteManager {
     get isFavorite() {
         return this.restaurant.is_favorite;
     }
     
     constructor(restaurant, containerElement, db) {
+        this.httpClient = new HttpClient();
         this.db = db;
         this.restaurant = restaurant;
         this.containerElement = containerElement;
@@ -24,8 +27,11 @@ export default class FavouriteManager {
     }
 
     _update() {
-        this.db.updateRestaurantById(this.restaurant.id, { is_favorite: this.isFavorite });
         this.button.innerHTML = this._getCurrentStar();
+        this.httpClient.putFavouriteResraurant(this.restaurant.id, this.isFavorite)
+        .then(((restaurant) => {
+            this.db.updateRestaurantById(this.restaurant.id, { is_favorite: this.isFavorite });
+        }).bind(this));
     }
 
     _getCurrentStar() {
