@@ -101,7 +101,7 @@ export default class ReviewFormManager {
                 'updatedAt': createDate
               };
             
-            this.appendNewReview(newReview);
+            this.prependNewReview(newReview);
     
             this.httpClient.postRestaurantReview(newReview)
             .then((addedReview => {
@@ -148,9 +148,14 @@ export default class ReviewFormManager {
         this.formElem.commentTextarea.value = "";
     }
 
-    appendNewReview(review) {
+    prependNewReview(review) {
         const ul = document.getElementById('reviews-list');
-        ul.appendChild(this.createReviewHTML(review));
+        const reviewLi = this.createReviewHTML(review);
+        if(ul.childNodes.length > 0) {
+            ul.insertBefore(reviewLi, ul.firstChild);
+            return ;
+        }
+        ul.appendChild(reviewLi);
     }
 
     /**
@@ -163,16 +168,35 @@ export default class ReviewFormManager {
         container.appendChild(title);
     
         if (!reviews) {
-        const noReviews = document.createElement('p');
-        noReviews.innerHTML = 'No reviews yet!';
-        container.appendChild(noReviews);
-        return;
+            const noReviews = document.createElement('p');
+            noReviews.innerHTML = 'No reviews yet!';
+            container.appendChild(noReviews);
+            return;
         }
         const ul = document.getElementById('reviews-list');
-        reviews.forEach(review => {
-        ul.appendChild(this.createReviewHTML(review));
+        reviews.reverse()
+        // .sort((r1, r2) => {
+        //     if(r1.createdAt && r2.createdAt)
+        //         return this._orderByDate(r1.createdAt, r2.createdAt);
+        //     else
+        //         return 0; // there is no dates to sort by                
+        // })
+        .forEach(review => {
+            ul.appendChild(this.createReviewHTML(review));
         });
         container.appendChild(ul);
+    }
+
+    _orderByDate(date1, date2) {
+        const d1 = new Date(date1);
+        const d2 = new Date(date2);
+
+        if(d1 > d2) 
+            return -1
+        else if(d1 < d2)
+            return 1;
+
+        return 0; 
     }
 
     /**
