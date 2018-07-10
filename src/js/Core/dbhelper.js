@@ -9,10 +9,16 @@ var REVIEWS_STORE = 'reviews';
 
 export default class DBHelper {
   constructor() {
+    this.httpClient = null;
+    this.dbPromise = null;
+  }
+  
+  initialise() {    
     this.httpClient = new HttpClient();
     this.dbPromise = this.openDatabase();
-    this.dbPromise.then((db=>{
-      this.updateDatabase();
+    return this.dbPromise.then((db=>{
+      return this.updateDatabase()
+      .then(x=>Promise.resolve(true));
     }).bind(this));
   }
 
@@ -29,7 +35,7 @@ export default class DBHelper {
   }
 
   updateDatabase() {
-    this.getRestaurantById(10).then((val=>{
+    return this.getRestaurantById(10).then((val=>{
       if(!val) {
         this.httpClient.getAllRestaurants().then((restaurants => {
           for(let restaurant of restaurants) { 

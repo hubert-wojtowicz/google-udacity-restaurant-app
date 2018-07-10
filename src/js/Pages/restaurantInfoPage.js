@@ -2,7 +2,6 @@ import CommonHelper from '../Core/commonHelper';
 import MapManager from '../Managers/mapManager';
 import ReviewFormManager from '../Managers/reviewFormManager';
 
-
 export default class RestaurantInfoPage {
   constructor(db) {
     this.db = db;
@@ -14,19 +13,24 @@ export default class RestaurantInfoPage {
   }
   
   onDOMContentLoaded(event) {
-    this.getRestaurantFromURL()
-    .then(restaurant => {
-      this.mapManager = new MapManager([restaurant], true);
+    this.db.initialise().then((success=>{
+      if(!success) return Promise.rejects('Db initialise failed')
 
-      const reviewFormContainer = document.getElementById('review-form');
-      this.reviewFormManager = new ReviewFormManager(restaurant, reviewFormContainer, this.db);
-
-      this.fillBreadcrumb();
-      this.fillRestaurantHTML(restaurant);
-    })
-    .catch(err => {
-      console.log(err);
-    });
+      this.getRestaurantFromURL()
+      .then(restaurant => {
+        this.mapManager = new MapManager([restaurant], true);
+  
+        const reviewFormContainer = document.getElementById('review-form');
+        this.reviewFormManager = new ReviewFormManager(restaurant, reviewFormContainer, this.db);
+  
+        this.fillBreadcrumb();
+        this.fillRestaurantHTML(restaurant);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    }).bind(this));
+    
   }
 
   /**

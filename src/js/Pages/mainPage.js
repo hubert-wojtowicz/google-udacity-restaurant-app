@@ -16,24 +16,28 @@ export default class MainPage {
    * Get neighborhoods and cuisines as soon as the page is loaded.
    */
   onDOMContentLoaded(event) {
-    this.db.getRestaurantByCuisineAndNeighborhood('all', 'all')
-    .then((restaurants)=>{
-      this.restaurants = restaurants;
-      this.mapManager = new MapManager(restaurants);
-    }).catch((err)=>{
-      console.log(err);
-    });
+    this.db.initialise().then((success=>{
+      if(!success) return Promise.rejects('Db initialise failed');
 
-    this.getNeighborhoods();
-    this.getCuisines();
-    
-    let nSel =  document.getElementById('neighborhoods-select');
-    let cSel =  document.getElementById('cuisines-select');
-    
-    nSel.addEventListener('change',() => this.updateRestaurants());
-    cSel.addEventListener('change',() => this.updateRestaurants());
+      this.db.getRestaurantByCuisineAndNeighborhood('all', 'all')
+      .then((restaurants)=>{
+        this.restaurants = restaurants;
+        this.mapManager = new MapManager(restaurants);
+      }).catch((err)=>{
+        console.log(err);
+      });
 
-    this.updateRestaurants()
+      this.getNeighborhoods();
+      this.getCuisines();
+      
+      let nSel =  document.getElementById('neighborhoods-select');
+      let cSel =  document.getElementById('cuisines-select');
+      
+      nSel.addEventListener('change',() => this.updateRestaurants());
+      cSel.addEventListener('change',() => this.updateRestaurants());
+
+      this.updateRestaurants();
+    }).bind(this));
   }
 
   /**
