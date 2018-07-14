@@ -105,7 +105,7 @@ export default class ReviewFormManager {
     
             this.httpClient.postRestaurantReview(newReview)
             .then((addedReview => {
-                this.db.addRestaurantReview(addedReview);
+                this.db.addReview(addedReview);
             }).bind(this))
             .catch(console.log);
             this._showSuccessMsg();  
