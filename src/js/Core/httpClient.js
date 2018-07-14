@@ -23,6 +23,9 @@ export default class HttpClientHelper extends HttpRouting {
         .then(response => response.json());
     }
 
+    getAllRestaurantsCount() {
+        return new Promise(resolve => resolve(10));
+    }
     getRestaurantReviews(restaurantId) {
         return fetch(this.GET_RESTAURANT_REVIEWS_URL(restaurantId))
         .then(response => response.json());

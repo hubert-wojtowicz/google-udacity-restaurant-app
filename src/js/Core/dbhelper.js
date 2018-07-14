@@ -17,8 +17,7 @@ export default class DBHelper {
     this.httpClient = new HttpClient();
     this.dbPromise = this.openDatabase();
     return this.dbPromise.then((db=>{
-      return this.updateDatabase()
-      .then(x=>Promise.resolve(true));
+       return this.updateDatabase();
     }).bind(this));
   }
 
@@ -34,30 +33,64 @@ export default class DBHelper {
     });
   }
 
+  isDbUpdated() {
+    return this.httpClient.getAllRestaurantsCount()
+    .then((restaurantsCount => this.getRestaurantById(restaurantsCount)).bind(this))
+    .then(val=>{
+      return new Promise(resolve => {
+        let isDbUpdated = false;
+        if(val) isDbUpdated = true;
+        resolve(isDbUpdated);
+      });
+    });
+  }
+
   updateDatabase() {
-    return this.getRestaurantById(10).then((val=>{
-      if(!val) {
-        this.httpClient.getAllRestaurants().then((restaurants => {
-          for(let restaurant of restaurants) { 
-            this.addRestaurant(restaurant);
-            this.httpClient.getRestaurantReviews(restaurant.id).then((reviews => {
-              reviews.forEach((reveiw => {
-                this.addRestaurantReview(reveiw);
-              }).bind(this));
+    return this.isDbUpdated().then(isDbUpdated=>{
+      return new Promise((resolve, reject)=>{
+        if(isDbUpdated) reject("Db is updated");
+        resolve();
+      });
+    }).then(()=>{
+      return this.httpClient.getAllRestaurants().then((restaurants => {
+
+        let addRestaurantAndReviewPromises = [];
+        for(let restaurant of restaurants) { 
+          let addRestaurantPromise = this.addRestaurant(restaurant);
+  
+          let addReviewPromise = this.httpClient.getRestaurantReviews(restaurant.id).then((reviews => {
+            let restaurantReviewsPromises = [];
+            reviews.forEach((reveiw => {
+              let reviewPromise = this.addReview(reveiw);
+              restaurantReviewsPromises.push(reviewPromise);
             }).bind(this));
-          }
-        }).bind(this))
-        .catch(err => {
-          console.log(`Error while fetching restaurants: ${err}`);
-        });
-      }
-    }).bind(this))
-    .catch(console.log);
+            return Promise.all(restaurantReviewsPromises);
+          }).bind(this));
+
+          addRestaurantAndReviewPromises.push(addRestaurantPromise);
+          addRestaurantAndReviewPromises.push(addReviewPromise);
+        }
+
+        return Promise.all(addRestaurantAndReviewPromises);
+      }).bind(this)).then(()=>{
+        return true; //return success
+      });
+    },()=>{
+      return true;
+    });
   }
 
   //////////////////////////////////////    ADD       //////////////////////////////////////      
+  addAllReviews(reviews) {
+    let reviewsPromises = [];
+    for(let review of reviews) { 
+      let addReviewPromise = this.addReview(review);
+      reviewsPromises.push(addReviewPromise);
+    }
+    return Promise.all(restaurantAndReviewsAddPromises);
+  }
 
-  addRestaurantReview(review) {
+  addReview(review) {
     return this.dbPromise.then(db=>{
       const tx = db.transaction(REVIEWS_STORE,'readwrite');
       const reviewObjStore = tx.objectStore(REVIEWS_STORE); 
@@ -68,11 +101,20 @@ export default class DBHelper {
     });
   }
 
+  addAllRestaurants(restaurants) {
+    let restaurantsAddPromises = [];
+    for(let restaurant of restaurants) { 
+      let addRestaurantPromise = this.addRestaurant(restaurant);
+      restaurantsAddPromises.push(addRestaurantPromise);
+    }
+    return Promise.all(restaurantsAddPromises);
+  }
+
   addRestaurant(restaurant) {
-    this.dbPromise.then(db=>{
+    return this.dbPromise.then(db=>{
       const tx = db.transaction(RESTAURANTS_STORE,'readwrite');
       const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE); 
-      restaurantObjStore.put(restaurant);
+      restaurantObjStore.add(restaurant);
       return tx.complete;
     }).catch((err)=>{
       console.log(`Error while adding restaurant ${restaurant} to idb: ${err}`);
