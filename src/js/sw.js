@@ -47,13 +47,15 @@ self.addEventListener('fetch', event => {
 
 function fetchReq(request, cache){
     return fetch(request).then(response => {  
-        if(request.method === 'POST') return response;    
-        cache.put(request, response.clone());      
+        if(request.method === 'GET')   
+            cache.put(request, response.clone()); 
+
         return response;
     }).catch(err => {
         if(navigator && !navigator.onLine) {
             console.log(`You are in offline mode and response of request is not cached! This is request: ${request}`);
-        } else{
+        } 
+        else {
             console.log(`Fetching request filed :(. This is request: ${request}`);      
         }
         console.log(`Error obj: ${err}`);
