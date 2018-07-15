@@ -13,7 +13,9 @@ export default class HttpClientHelper extends HttpRouting {
     }
 
     putFavouriteResraurant(restaurantId, isFavourite) {
-        return fetch(this.PUT_RESTAURANT_FAVORITE_URL(restaurantId,isFavourite))
+        return fetch(this.PUT_RESTAURANT_FAVORITE_URL(restaurantId,isFavourite), {
+            method: 'PUT'
+        })
         .then(response => response.json());
 
     }
