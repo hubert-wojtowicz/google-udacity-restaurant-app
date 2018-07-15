@@ -109,6 +109,7 @@ export default class MainPage {
       this.restaurants = restaurants;
       this.resetRestaurants(restaurants);
       this.fillRestaurantsHTML(restaurants);
+      this.mapManager.updateMap(restaurants);
     }).catch((error)=>{
       console.error(error);
     });
