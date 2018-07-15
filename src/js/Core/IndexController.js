@@ -7,7 +7,7 @@ export default class IndexController {
     constructor() {
       this.db = new DBHelper();
       this._registerServiceWorker();
-      window.onhashchange = this.routingControl();
+      window.onhashchange = this._routingControl();
     }
     
     _registerServiceWorker() {
@@ -20,13 +20,13 @@ export default class IndexController {
         // service worker is already installed
         if(!navigator.serviceWorker.controller) return;
         
-        console.log(`Registered successfully: ${registration}`);
+        console.log('Registered successfully: ',registration);
       }).catch((err)=>{
         console.log(`Registration failed: ${err}`);
       });
     };
 
-    routingControl() {
+    _routingControl() {
       let restaurantId = CommonHelper.getParameterByName('id');
       if(restaurantId) {
           this.page = new RestaurantInfoPage(this.db);
