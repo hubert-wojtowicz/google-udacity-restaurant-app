@@ -2,12 +2,11 @@ import idb from 'idb';
 import CommonHelper from './commonHelper';
 import HttpClient from './httpClient';
 
-var RESTAURANTS_DATABASE = 'restaurant-db';
-
-var RESTAURANTS_STORE = 'restaurants';
-var REVIEWS_STORE = 'reviews';
-
 export default class DBHelper {
+  get RESTAURANTS_DATABASE() { return 'restaurant-db'; }
+  get RESTAURANTS_STORE() { return 'restaurants'; }
+  get REVIEWS_STORE() { return 'reviews'; }
+
   constructor() {
     this.httpClient = null;
     this.dbPromise = null;
@@ -15,25 +14,25 @@ export default class DBHelper {
   
   initialise() {    
     this.httpClient = new HttpClient();
-    this.dbPromise = this.openDatabase();
+    this.dbPromise = this._openDatabase();
     return this.dbPromise.then((db=>{
-       return this.updateDatabase();
+       return this._updateDatabase();
     }).bind(this));
   }
 
-  openDatabase() {
-    return idb.open(RESTAURANTS_DATABASE, 1, upgradeDB => {
-      let restStore = upgradeDB.createObjectStore(RESTAURANTS_STORE, {keyPath: 'id'});  
+  _openDatabase() {
+    return idb.open(this.RESTAURANTS_DATABASE, 1, upgradeDB => {
+      let restStore = upgradeDB.createObjectStore(this.RESTAURANTS_STORE, {keyPath: 'id'});  
       restStore.createIndex('cuisine', 'cuisine_type');
       restStore.createIndex('neighborhood', 'neighborhood');
       restStore.createIndex('cuisineNeighborhood', ['cuisine_type', 'neighborhood']);
 
-      let reviewStore = upgradeDB.createObjectStore(REVIEWS_STORE, {keyPath: 'id'});
+      let reviewStore = upgradeDB.createObjectStore(this.REVIEWS_STORE, {keyPath: 'id'});
       reviewStore.createIndex('restaurantId','restaurant_id');
     });
   }
 
-  isDbUpdated() {
+  _isDbUpdated() {
     return this.httpClient.getAllRestaurantsCount()
     .then((restaurantsCount => this.getRestaurantById(restaurantsCount)).bind(this))
     .then(val=>{
@@ -45,8 +44,8 @@ export default class DBHelper {
     });
   }
 
-  updateDatabase() {
-    return this.isDbUpdated().then(isDbUpdated=>{
+  _updateDatabase() {
+    return this._isDbUpdated().then(isDbUpdated=>{
       return new Promise((resolve, reject)=>{
         if(isDbUpdated) reject("Db is updated");
         resolve();
@@ -81,6 +80,7 @@ export default class DBHelper {
   }
 
   //////////////////////////////////////    ADD       //////////////////////////////////////      
+
   addAllReviews(reviews) {
     let reviewsPromises = [];
     for(let review of reviews) { 
@@ -92,8 +92,8 @@ export default class DBHelper {
 
   addReview(review) {
     return this.dbPromise.then(db=>{
-      const tx = db.transaction(REVIEWS_STORE,'readwrite');
-      const reviewObjStore = tx.objectStore(REVIEWS_STORE); 
+      const tx = db.transaction(this.REVIEWS_STORE,'readwrite');
+      const reviewObjStore = tx.objectStore(this.REVIEWS_STORE); 
       reviewObjStore.add(review);
       return tx.complete;
     }).catch((err)=>{
@@ -112,8 +112,8 @@ export default class DBHelper {
 
   addRestaurant(restaurant) {
     return this.dbPromise.then(db=>{
-      const tx = db.transaction(RESTAURANTS_STORE,'readwrite');
-      const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE); 
+      const tx = db.transaction(this.RESTAURANTS_STORE,'readwrite');
+      const restaurantObjStore = tx.objectStore(this.RESTAURANTS_STORE); 
       restaurantObjStore.add(restaurant);
       return tx.complete;
     }).catch((err)=>{
@@ -124,9 +124,9 @@ export default class DBHelper {
   //////////////////////////////////////    UPDATE    //////////////////////////////////////
 
   updateRestaurantById(id, changedPropsOfRestaurant) {
-    this.dbPromise.then(db => {
-      const tx = db.transaction(RESTAURANTS_STORE,'readwrite'); 
-      tx.objectStore(RESTAURANTS_STORE).iterateCursor(cursor => { 
+    return this.dbPromise.then(db => {
+      const tx = db.transaction(this.RESTAURANTS_STORE,'readwrite'); 
+      tx.objectStore(this.RESTAURANTS_STORE).iterateCursor(cursor => { 
         if (!cursor) return;
         if(cursor.value.id && cursor.value.id === id) {
           CommonHelper.updateJsonObjByAnotherObj(cursor.value, changedPropsOfRestaurant);
@@ -135,7 +135,7 @@ export default class DBHelper {
         cursor.continue();
       });
 
-      tx.complete.then(() => console.log(`Updated restaurant of if=${id} with data:`, changedPropsOfRestaurant));
+      return tx.complete;
     }).catch(e => console.log(e));
   }
 
@@ -143,8 +143,8 @@ export default class DBHelper {
 
   getRestaurants() {
     return this.dbPromise.then((db)=>{
-      const tx = db.transaction(RESTAURANTS_STORE);
-      const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE);
+      const tx = db.transaction(this.RESTAURANTS_STORE);
+      const restaurantObjStore = tx.objectStore(this.RESTAURANTS_STORE);
       return restaurantObjStore.getAll();
     }).catch((err)=>{
       return Promise.reject(err);
@@ -153,16 +153,16 @@ export default class DBHelper {
 
   getRestaurantById(id) {
     return this.dbPromise.then((db)=>{
-      const tx = db.transaction(RESTAURANTS_STORE);
-      const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE);
+      const tx = db.transaction(this.RESTAURANTS_STORE);
+      const restaurantObjStore = tx.objectStore(this.RESTAURANTS_STORE);
       return restaurantObjStore.get(id);
     });
   }
 
   getReviewsByRestaurantId(restaurantId) {
     return this.dbPromise.then((db)=>{
-      const tx = db.transaction(REVIEWS_STORE);
-      const reviweObjectStore = tx.objectStore(REVIEWS_STORE);
+      const tx = db.transaction(this.REVIEWS_STORE);
+      const reviweObjectStore = tx.objectStore(this.REVIEWS_STORE);
       const reviwsByRestaurantIdIndex = reviweObjectStore.index('restaurantId');
       return reviwsByRestaurantIdIndex.getAll(restaurantId);
     })
@@ -216,8 +216,8 @@ export default class DBHelper {
   
   _getRestaurantsByIndex(databaseIndexName, filterValue) {
     return this.dbPromise.then((db)=>{
-      const tx = db.transaction(RESTAURANTS_STORE);
-      const restaurantObjStore = tx.objectStore(RESTAURANTS_STORE);
+      const tx = db.transaction(this.RESTAURANTS_STORE);
+      const restaurantObjStore = tx.objectStore(this.RESTAURANTS_STORE);
       const cuisineIndex = restaurantObjStore.index(databaseIndexName);
       return cuisineIndex.getAll(filterValue);
     })
