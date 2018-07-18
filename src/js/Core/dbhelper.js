@@ -6,6 +6,7 @@ export default class DBHelper {
   get RESTAURANTS_DATABASE() { return 'restaurant-db'; }
   get RESTAURANTS_STORE() { return 'restaurants'; }
   get REVIEWS_STORE() { return 'reviews'; }
+  get PENDING_STORE() { return 'pending'; }
 
   constructor() {
     this.httpClient = null;
@@ -29,6 +30,11 @@ export default class DBHelper {
 
       let reviewStore = upgradeDB.createObjectStore(this.REVIEWS_STORE, {keyPath: 'id'});
       reviewStore.createIndex('restaurantId','restaurant_id');
+
+      upgradeDB.createObjectStore(this.PENDING_STORE, {
+        keyPath: 'id',
+        autoIncrement: true
+      });
     });
   }
 
@@ -119,6 +125,10 @@ export default class DBHelper {
     }).catch((err)=>{
       console.log(`Error while adding restaurant ${restaurant} to idb: ${err}`);
     });
+  }
+
+  addPendingRequest() {
+
   }
 
   //////////////////////////////////////    UPDATE    //////////////////////////////////////
