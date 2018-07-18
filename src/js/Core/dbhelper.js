@@ -122,13 +122,18 @@ export default class DBHelper {
       const restaurantObjStore = tx.objectStore(this.RESTAURANTS_STORE); 
       restaurantObjStore.add(restaurant);
       return tx.complete;
-    }).catch((err)=>{
+    }).catch(err => {
       console.log(`Error while adding restaurant ${restaurant} to idb: ${err}`);
     });
   }
 
-  addPendingRequest() {
-
+  addPendingRequest(jsomStringParams) {
+    return this.dbPromise.then(db => {
+      const tx = db.transaction(this.PENDING_STORE,'readwrite');
+      const pendingStore = tx.objectStore(this.PENDING_STORE); 
+      pendingStore.add(jsomStringParams);
+      return tx.complete;
+    });
   }
 
   //////////////////////////////////////    UPDATE    //////////////////////////////////////
