@@ -6,7 +6,7 @@ export default class DBHelper {
   get RESTAURANTS_DATABASE() { return 'restaurant-db'; }
   get RESTAURANTS_STORE() { return 'restaurants'; }
   get REVIEWS_STORE() { return 'reviews'; }
-  get PENDING_STORE() { return 'pending'; }
+  get PENDING_REQUESTS_STORE() { return 'pending'; }
 
   constructor() {
     this.httpClient = null;
@@ -24,21 +24,23 @@ export default class DBHelper {
 
 
   syncPendingRequests(e) {
-    this.dbPromise.then((db => {
-      const tx = db.transaction(this.PENDING_STORE, 'readwrite');
-      tx.objectStore(this.PENDING_STORE).openCursor().then((function cursorIterate(cursor) {
-        if(!cursor || !navigator.onLine) return;
-        debugger;
-        return this.performRequest(cursor.value).then((resp=>{
-          if(resp.ok == true);
-            return this.delete(cursor.key, this.PENDING_STORE).then((x=>{
-              return cursor.continue().then(cursorIterate);
-            }).bind(this))
-        }).bind(this));    
-
+    this.getFirst(this.PENDING_REQUESTS_STORE).then(function go(pendingReq) {
+      if(!pendingReq || !navigator.onLine) return;
+      this.performRequest(pendingReq).then(resp=>{
+        if(resp.ok)
+          return Promise.resolve();
+        return Promise.reject({ requestFailed: true });
+      }).then((()=>{
+        return this.delete(pendingReq.id, this.PENDING_REQUESTS_STORE);
+      }).bind(this)).then((x=>{
+        return this.getFirst(this.PENDING_REQUESTS_STORE).then(go.bind(this));
+      }).bind(this)).catch((e=>{
+        if(e && e.requestFailed) {
+          return this.getFirst(this.PENDING_REQUESTS_STORE).then(go.bind(this)); // retry send pending requests
+        }
+        return Promise.reject("Request succeeded but something bad happen afterward");
       }).bind(this));
-      return tx.complete;
-    }).bind(this)).catch(console.log);
+    }.bind(this)).catch(console.log);
   }
 
   performRequest(pendingRequest) {
@@ -60,9 +62,19 @@ export default class DBHelper {
     return true;
   }
 
+  getFirst(store) {
+    return this.dbPromise.then(db => {
+      const tx = db.transaction(store);
+      return tx.objectStore(store).openCursor().then(function cursorIterate(cursor) {
+        if (!cursor) return;
+        return cursor.value;
+      });
+    });
+  }
+
   get(key, store) {
     return this.dbPromise.then(db => {
-      const tx = db.transaction(store, 'readwrite');
+      const tx = db.transaction(store);
       tx.objectStore(store).get(key);
       return tx.complete;
     });
@@ -86,7 +98,7 @@ export default class DBHelper {
       let reviewStore = upgradeDB.createObjectStore(this.REVIEWS_STORE, {keyPath: 'id'});
       reviewStore.createIndex('restaurantId','restaurant_id');
 
-      upgradeDB.createObjectStore(this.PENDING_STORE, {
+      upgradeDB.createObjectStore(this.PENDING_REQUESTS_STORE, {
         keyPath: 'id',
         autoIncrement: true
       });
@@ -184,8 +196,8 @@ export default class DBHelper {
 
   addPendingRequest(jsomStringParams) {
     return this.dbPromise.then(db => {
-      const tx = db.transaction(this.PENDING_STORE,'readwrite');
-      const pendingStore = tx.objectStore(this.PENDING_STORE); 
+      const tx = db.transaction(this.PENDING_REQUESTS_STORE,'readwrite');
+      const pendingStore = tx.objectStore(this.PENDING_REQUESTS_STORE); 
       pendingStore.add(jsomStringParams);
       return tx.complete;
     });
