@@ -17,8 +17,63 @@ export default class DBHelper {
     this.httpClient = new HttpClient();
     this.dbPromise = this._openDatabase();
     return this.dbPromise.then((db=>{
-       return this._updateDatabase();
+      window.addEventListener('online', this.syncPendingRequests.bind(this));
+      return this._updateDatabase();
     }).bind(this));
+  }
+
+
+  syncPendingRequests(e) {
+    this.dbPromise.then((db => {
+      const tx = db.transaction(this.PENDING_STORE, 'readwrite');
+      tx.objectStore(this.PENDING_STORE).openCursor().then((function cursorIterate(cursor) {
+        if(!cursor || !navigator.onLine) return;
+        debugger;
+        return this.performRequest(cursor.value).then((resp=>{
+          if(resp.ok == true);
+            return this.delete(cursor.key, this.PENDING_STORE).then((x=>{
+              return cursor.continue().then(cursorIterate);
+            }).bind(this))
+        }).bind(this));    
+
+      }).bind(this));
+      return tx.complete;
+    }).bind(this)).catch(console.log);
+  }
+
+  performRequest(pendingRequest) {
+    if(!pendingRequest || !pendingRequest.tag ) {
+      return Promise.reject();
+    }
+
+    switch(pendingRequest.tag) {
+      case 'favourite':
+        return this.httpClient.putFavouriteResraurant(pendingRequest.restaurantId, pendingRequest.favourite)
+      case 'review':
+        return this.syncReview(pendingRequest);
+      default:
+        return Promise.reject();
+    }
+  }
+
+  syncReview(pendingRequest) {
+    return true;
+  }
+
+  get(key, store) {
+    return this.dbPromise.then(db => {
+      const tx = db.transaction(store, 'readwrite');
+      tx.objectStore(store).get(key);
+      return tx.complete;
+    });
+  }
+
+  delete(key, store) {
+    return this.dbPromise.then(db => {
+      const tx = db.transaction(store, 'readwrite');
+      tx.objectStore(store).delete(key);
+      return tx.complete;
+    });
   }
 
   _openDatabase() {
