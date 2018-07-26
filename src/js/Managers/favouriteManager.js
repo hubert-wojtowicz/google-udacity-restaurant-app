@@ -27,7 +27,14 @@ export default class FavouriteManager {
         this.button.innerHTML = this._getCurrentFavoriteState();
 
         this.db.updateRestaurantById(this.restaurant.id, { is_favorite: this.isFavorite }).then((() => {
-            this.httpClient.putFavouriteResraurant(this.restaurant.id, this.isFavorite)
+            this.httpClient.putFavouriteResraurant(this.restaurant.id, this.isFavorite).catch((err => {
+                let obj = {
+                    tag: 'favourite',
+                    restaurantId: this.restaurant.id,
+                    favourite: this.isFavorite
+                };
+                this.db.addPendingRequest(obj);
+            }).bind(this))
         }).bind(this)).catch(console.log);
     }
 

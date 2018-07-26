@@ -92,7 +92,7 @@ export default class ReviewFormManager {
         if(validationMsg.length == 0) {
             let createDate = new Date().getTime();
             const newReview = {
-                'id': null,
+                // 'id': null,
                 'restaurant_id': this.restaurant.id,
                 'name': this.formElem.authorInputText.value,
                 'rating': this.formElem.rateHidden.value,
@@ -101,14 +101,23 @@ export default class ReviewFormManager {
                 'updatedAt': createDate
               };
             
-            this.prependNewReview(newReview);
-    
-            this.httpClient.postRestaurantReview(newReview)
-            .then((addedReview => {
-                this.db.addReview(addedReview);
-            }).bind(this))
-            .catch(console.log);
-            this._showSuccessMsg();  
+            this.db.addReview(newReview).then(((id)=>{
+                newReview['id']=id;
+                this.prependNewReview(newReview);
+                return Promise.resolve();
+            }).bind(this)).then(()=>{
+                this.httpClient.postRestaurantReview(newReview).catch(e => {
+                    let obj = {
+                        tag: 'review',
+                        reviewBody: newReview,
+                    };
+                    this.db.addPendingRequest(obj);
+                });
+            }).then((()=>{
+                this._showSuccessMsg();
+                return Promise.resolve();
+            }).bind(this)).catch(console.log);
+            
         }
         this._resetForm();
     }

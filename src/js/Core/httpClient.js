@@ -9,15 +9,13 @@ export default class HttpClientHelper extends HttpRouting {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json());
+        .then(response => { return { ok:response.ok, body: response.json() }; });
     }
 
     putFavouriteResraurant(restaurantId, isFavourite) {
         return fetch(this.PUT_RESTAURANT_FAVORITE_URL(restaurantId,isFavourite), {
             method: 'PUT'
-        })
-        .then(response => response.json());
-
+        });
     }
 
     getAllRestaurants() {

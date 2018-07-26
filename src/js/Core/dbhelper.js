@@ -6,6 +6,7 @@ export default class DBHelper {
   get RESTAURANTS_DATABASE() { return 'restaurant-db'; }
   get RESTAURANTS_STORE() { return 'restaurants'; }
   get REVIEWS_STORE() { return 'reviews'; }
+  get PENDING_REQUESTS_STORE() { return 'pending'; }
 
   constructor() {
     this.httpClient = null;
@@ -16,8 +17,71 @@ export default class DBHelper {
     this.httpClient = new HttpClient();
     this.dbPromise = this._openDatabase();
     return this.dbPromise.then((db=>{
-       return this._updateDatabase();
+      window.addEventListener('online', this.syncPendingRequests.bind(this));
+      return this._updateDatabase();
     }).bind(this));
+  }
+
+
+  syncPendingRequests(e) {
+    this.getFirst(this.PENDING_REQUESTS_STORE).then(function go(pendingReq) {
+      if(!pendingReq || !navigator.onLine) return;
+      this.performRequest(pendingReq).then(resp=>{
+        if(resp.ok)
+          return Promise.resolve();
+        return Promise.reject({ requestFailed: true });
+      }).then((()=>{
+        return this.delete(pendingReq.id, this.PENDING_REQUESTS_STORE);
+      }).bind(this)).then((x=>{
+        return this.getFirst(this.PENDING_REQUESTS_STORE).then(go.bind(this));
+      }).bind(this)).catch((e=>{
+        if(e && e.requestFailed) {
+          return this.getFirst(this.PENDING_REQUESTS_STORE).then(go.bind(this)); // retry send pending requests
+        }
+        return Promise.reject("Request succeeded but something bad happen afterward");
+      }).bind(this));
+    }.bind(this)).catch(console.log);
+  }
+
+  performRequest(pendingRequest) {
+    if(!pendingRequest || !pendingRequest.tag ) {
+      return Promise.reject();
+    }
+
+    switch(pendingRequest.tag) {
+      case 'favourite':
+        return this.httpClient.putFavouriteResraurant(pendingRequest.restaurantId, pendingRequest.favourite)
+      case 'review':
+        return this.httpClient.postRestaurantReview(pendingRequest.reviewBody);
+      default:
+        return Promise.reject();
+    }
+  }
+
+  getFirst(store) {
+    return this.dbPromise.then(db => {
+      const tx = db.transaction(store);
+      return tx.objectStore(store).openCursor().then(function cursorIterate(cursor) {
+        if (!cursor) return;
+        return cursor.value;
+      });
+    });
+  }
+
+  get(key, store) {
+    return this.dbPromise.then(db => {
+      const tx = db.transaction(store);
+      tx.objectStore(store).get(key);
+      return tx.complete;
+    });
+  }
+
+  delete(key, store) {
+    return this.dbPromise.then(db => {
+      const tx = db.transaction(store, 'readwrite');
+      tx.objectStore(store).delete(key);
+      return tx.complete;
+    });
   }
 
   _openDatabase() {
@@ -27,8 +91,13 @@ export default class DBHelper {
       restStore.createIndex('neighborhood', 'neighborhood');
       restStore.createIndex('cuisineNeighborhood', ['cuisine_type', 'neighborhood']);
 
-      let reviewStore = upgradeDB.createObjectStore(this.REVIEWS_STORE, {keyPath: 'id'});
+      let reviewStore = upgradeDB.createObjectStore(this.REVIEWS_STORE, {keyPath: 'id', autoIncrement: true});
       reviewStore.createIndex('restaurantId','restaurant_id');
+
+      upgradeDB.createObjectStore(this.PENDING_REQUESTS_STORE, {
+        keyPath: 'id',
+        autoIncrement: true
+      });
     });
   }
 
@@ -93,9 +162,8 @@ export default class DBHelper {
   addReview(review) {
     return this.dbPromise.then(db=>{
       const tx = db.transaction(this.REVIEWS_STORE,'readwrite');
-      const reviewObjStore = tx.objectStore(this.REVIEWS_STORE); 
-      reviewObjStore.add(review);
-      return tx.complete;
+      const reviewObjStore = tx.objectStore(this.REVIEWS_STORE);
+      return reviewObjStore.add(review);
     }).catch((err)=>{
       console.log(`Error while adding restaurant review ${review} to idb: ${err}`);
     });
@@ -116,8 +184,17 @@ export default class DBHelper {
       const restaurantObjStore = tx.objectStore(this.RESTAURANTS_STORE); 
       restaurantObjStore.add(restaurant);
       return tx.complete;
-    }).catch((err)=>{
+    }).catch(err => {
       console.log(`Error while adding restaurant ${restaurant} to idb: ${err}`);
+    });
+  }
+
+  addPendingRequest(jsomStringParams) {
+    return this.dbPromise.then(db => {
+      const tx = db.transaction(this.PENDING_REQUESTS_STORE,'readwrite');
+      const pendingStore = tx.objectStore(this.PENDING_REQUESTS_STORE); 
+      pendingStore.add(jsomStringParams);
+      return tx.complete;
     });
   }
 
