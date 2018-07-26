@@ -10,7 +10,7 @@ For installation of this project following steps are required:
 3. Download code from this repository.
 4. Install all project dependencies - run `npm install` cmd in terminal.
 5. Install `GraphicsMagick` version at least `1.3.28`. This program is required by `gulp-image-resize` package.
-6. Update google API key in `./config.js` file. The file structure shall looks like below:
+6. Place google API key in `./config.js` in root project directory. If no file there create it manually. The file structure shall looks like below:
 ```javascript
 module.exports = {
     "GOOGLE_MAPS": {
