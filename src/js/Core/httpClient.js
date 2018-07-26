@@ -9,7 +9,7 @@ export default class HttpClientHelper extends HttpRouting {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json());
+        .then(response => { return { ok:response.ok, body: response.json() }; });
     }
 
     putFavouriteResraurant(restaurantId, isFavourite) {

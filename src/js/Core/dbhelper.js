@@ -52,14 +52,10 @@ export default class DBHelper {
       case 'favourite':
         return this.httpClient.putFavouriteResraurant(pendingRequest.restaurantId, pendingRequest.favourite)
       case 'review':
-        return this.syncReview(pendingRequest);
+        return this.httpClient.postRestaurantReview(pendingRequest.reviewBody);
       default:
         return Promise.reject();
     }
-  }
-
-  syncReview(pendingRequest) {
-    return true;
   }
 
   getFirst(store) {
@@ -95,7 +91,7 @@ export default class DBHelper {
       restStore.createIndex('neighborhood', 'neighborhood');
       restStore.createIndex('cuisineNeighborhood', ['cuisine_type', 'neighborhood']);
 
-      let reviewStore = upgradeDB.createObjectStore(this.REVIEWS_STORE, {keyPath: 'id'});
+      let reviewStore = upgradeDB.createObjectStore(this.REVIEWS_STORE, {keyPath: 'id', autoIncrement: true});
       reviewStore.createIndex('restaurantId','restaurant_id');
 
       upgradeDB.createObjectStore(this.PENDING_REQUESTS_STORE, {
@@ -166,9 +162,8 @@ export default class DBHelper {
   addReview(review) {
     return this.dbPromise.then(db=>{
       const tx = db.transaction(this.REVIEWS_STORE,'readwrite');
-      const reviewObjStore = tx.objectStore(this.REVIEWS_STORE); 
-      reviewObjStore.add(review);
-      return tx.complete;
+      const reviewObjStore = tx.objectStore(this.REVIEWS_STORE);
+      return reviewObjStore.add(review);
     }).catch((err)=>{
       console.log(`Error while adding restaurant review ${review} to idb: ${err}`);
     });
